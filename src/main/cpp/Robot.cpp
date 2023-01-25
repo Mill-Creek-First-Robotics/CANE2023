@@ -11,20 +11,24 @@
 
 
 
-/**
+/*
  * Using the DifferentialDrive class.
  * Runs the motors with split arcade steering and an Xbox controller.
  */
 class Robot : public frc::TimedRobot {
+ //Defining all motors with their adjacent CAN Buses
   WPI_TalonSRX m_BackleftMotor{12};
   WPI_TalonSRX m_BackrightMotor{1};
-    WPI_TalonSRX m_FrontleftMotor{13};
+  WPI_TalonSRX m_FrontleftMotor{13};     
   WPI_TalonSRX m_FrontrightMotor{2};
-  frc::MotorControllerGroup m_left{m_BackleftMotor, m_FrontleftMotor};
-  frc::MotorControllerGroup m_right{m_BackrightMotor, m_FrontrightMotor};
-  frc::DifferentialDrive m_drive{m_left, m_right};
-  frc::XboxController m_driverController{0};
-
+// ^ Calling the TalonConrollers using the Web 
+//(https://maven.ctr-electronics.com/release/com/ctre/phoenix/Phoenix5-frc2023-latest.json)
+   
+    frc::MotorControllerGroup m_left{m_BackleftMotor, m_FrontleftMotor};
+    frc::MotorControllerGroup m_right{m_BackrightMotor, m_FrontrightMotor};
+    frc::DifferentialDrive m_drive{m_left, m_right};
+    frc::XboxController m_driverController{0};
+// Here we use MotorControllerGroup to group the 2 motors into 1 side of the Drive
 
  public:
   void RobotInit() override {
