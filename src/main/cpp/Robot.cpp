@@ -9,13 +9,13 @@
 #include <frc/motorcontrol/Spark.h>
 #include "ctre/Phoenix.h"
 
-
+using namespace frc;
 
 /*
  * Using the DifferentialDrive class.
  * Runs the motors with split arcade steering and an Xbox controller.
  */
-class Robot : public frc::TimedRobot {
+class Robot : public TimedRobot {
  //Defining all motors with their adjacent CAN Buses
   WPI_TalonSRX m_BackleftMotor{12};
   WPI_TalonSRX m_BackrightMotor{1};
@@ -24,10 +24,10 @@ class Robot : public frc::TimedRobot {
 // ^ Calling the TalonConrollers using the Web 
 //(https://maven.ctr-electronics.com/release/com/ctre/phoenix/Phoenix5-frc2023-latest.json)
    
-    frc::MotorControllerGroup m_left{m_BackleftMotor, m_FrontleftMotor};
-    frc::MotorControllerGroup m_right{m_BackrightMotor, m_FrontrightMotor};
-    frc::DifferentialDrive m_drive{m_left, m_right};
-    frc::XboxController m_driverController{0};
+    MotorControllerGroup m_left{m_BackleftMotor, m_FrontleftMotor};
+    MotorControllerGroup m_right{m_BackrightMotor, m_FrontrightMotor};
+    DifferentialDrive m_drive{m_left, m_right};
+    XboxController m_driverController{0};
 // Here we use MotorControllerGroup to group the 2 motors into 1 side of the Drive
 
  public:
@@ -48,6 +48,6 @@ class Robot : public frc::TimedRobot {
 
 #ifndef RUNNING_FRC_TESTS
 int main() {
-  return frc::StartRobot<Robot>();
+  return StartRobot<Robot>();
 }
 #endif
