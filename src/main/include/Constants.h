@@ -3,7 +3,7 @@
 #include <frc/XboxController.h>
 
 //frc::Joystick joystick{0};
-frc::XboxController const m_controller{0};//{int index} as defined in driverstation
+frc::XboxController m_controller{0};//{int index} as defined in driverstation
   /** Button Bindings Overview:
    *  Left Joystick y-axis = move robot forward/back
    *  Right Joystick x-axis = rotate robot left/right

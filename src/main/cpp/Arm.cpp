@@ -44,7 +44,7 @@ void Arm::CheckControllerState() {
 }
 //Arm positions
 //This & ArmSecondPosition are for testing.
-//TODO: Test that motor rotates forward and back with right/left bumber presses.
+//TODO: Test that motor rotates forward and back with right/left bumper presses.
 void Arm::ArmFirstPosition() {
     armController.Set(1.0); //Move forwards
 }

@@ -16,7 +16,6 @@ class Arm {
   void ArmThirdPosition();
   void ResetPosition();
   void HandleGrabber();
-  void ToggleGrabber();
  private:
   //int deviceNumber
   WPI_TalonSRX armController{ARM_MOTOR_CONTROLLER};
