@@ -1,50 +1,75 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+#include "Robot.h"
+#include <fmt/core.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
-#include <frc/TimedRobot.h>
-#include <frc/XboxController.h>
-#include <frc/drive/DifferentialDrive.h>
-#include <frc/motorcontrol/MotorControllerGroup.h>
-#include <frc/motorcontrol/Spark.h>
-#include "ctre/Phoenix.h"
+void Robot::RobotInit() {
+  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
+  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+}
 
-
-
-/*
- * Using the DifferentialDrive class.
- * Runs the motors with split arcade steering and an Xbox controller.
+/**
+ * This function is called every robot packet, no matter the mode. Use
+ * this for items like diagnostics that you want ran during disabled,
+ * autonomous, teleoperated and test.
+ *
+ * <p> This runs after the mode specific periodic functions, but before
+ * LiveWindow and SmartDashboard integrated updating.
  */
-class Robot : public frc::TimedRobot {
- //Defining all motors with their adjacent CAN Buses
-  WPI_TalonSRX m_BackleftMotor{12};
-  WPI_TalonSRX m_BackrightMotor{1};
-  WPI_TalonSRX m_FrontleftMotor{13};     
-  WPI_TalonSRX m_FrontrightMotor{2};
-// ^ Calling the TalonConrollers using the Web 
-//(https://maven.ctr-electronics.com/release/com/ctre/phoenix/Phoenix5-frc2023-latest.json)
-   
-    frc::MotorControllerGroup m_left{m_BackleftMotor, m_FrontleftMotor};
-    frc::MotorControllerGroup m_right{m_BackrightMotor, m_FrontrightMotor};
-    frc::DifferentialDrive m_drive{m_left, m_right};
-    frc::XboxController m_driverController{0};
-// Here we use MotorControllerGroup to group the 2 motors into 1 side of the Drive
+void Robot::RobotPeriodic() {}
 
- public:
-  void RobotInit() override {
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-  
-    m_right.SetInverted(true);
+/**
+ * This autonomous (along with the chooser code above) shows how to select
+ * between different autonomous modes using the dashboard. The sendable chooser
+ * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+ * remove all of the chooser code and uncomment the GetString line to get the
+ * auto name from the text box below the Gyro.
+ *
+ * You can add additional auto modes by adding additional comparisons to the
+ * if-else structure below with additional strings. If using the SendableChooser
+ * make sure to add them to the chooser code above as well.
+ */
+void Robot::AutonomousInit() {
+  m_autoSelected = m_chooser.GetSelected();
+  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
+  //     kAutoNameDefault);
+  fmt::print("Auto selected: {}\n", m_autoSelected);
+
+  if (m_autoSelected == kAutoNameCustom) {
+    // Custom Auto goes here
+  } else {
+    m_drive.TimerReset();
   }
+}
 
-  void TeleopPeriodic() override {
-
-    m_drive.ArcadeDrive(m_driverController.GetLeftY(),
-                             -m_driverController.GetRightX());
+void Robot::AutonomousPeriodic() {
+  if (m_autoSelected == kAutoNameCustom) {
+    // Custom Auto goes here
+  } else {
+    m_drive.Autonomous();
   }
-};
+}
+
+void Robot::TeleopInit() {}
+
+void Robot::TeleopPeriodic() {
+  // Could we run these two in threads? 
+  // Eventually they might depend on one another...
+  m_drive.TuxDrive();
+  m_arm.CheckControllerState();
+}
+
+void Robot::DisabledInit() {}
+void Robot::DisabledPeriodic() {}
+
+void Robot::TestInit() {}
+void Robot::TestPeriodic() {}
+
+void Robot::SimulationInit() {}
+void Robot::SimulationPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
 int main() {

@@ -1,15 +1,16 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 #pragma once
-
+#include "Arm.h"
+#include "Drive.h"
 #include <string>
-
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+using namespace std;
+using namespace frc;
 
-class Robot : public frc::TimedRobot {
+class Robot : public TimedRobot {
  public:
   void RobotInit() override;
   void RobotPeriodic() override;
@@ -25,8 +26,12 @@ class Robot : public frc::TimedRobot {
   void SimulationPeriodic() override;
 
  private:
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
-  std::string m_autoSelected;
+  SendableChooser<string> m_chooser;
+  string const kAutoNameDefault = "Default";
+  string const kAutoNameCustom = "My Auto";
+  string m_autoSelected;
+  //Drivetrain
+  Drive m_drive{};
+  //Arm & Grabber
+  Arm m_arm{};
 };
