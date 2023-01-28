@@ -11,7 +11,6 @@
 
 using namespace frc;
 
-
 /*
  * Using the DifferentialDrive class.
  * Runs the motors with split arcade steering and an Xbox controller.
@@ -50,6 +49,6 @@ class Robot : public TimedRobot {
 
 #ifndef RUNNING_FRC_TESTS
 int main() {
-  return frc::StartRobot<Robot>();
+  return StartRobot<Robot>();
 }
 #endif
