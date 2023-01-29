@@ -3,6 +3,7 @@
 #include "ctre/Phoenix.h"
 #include <frc/Solenoid.h>
 #include <frc/Compressor.h>
+#include <frc/XboxController.h>
 #include <frc/PneumaticsModuleType.h>
 using namespace frc;
 
@@ -24,5 +25,8 @@ class Arm {
   //{int compressor, module type}
   Compressor pcmCompressor{PNEUMATICS, PneumaticsModuleType::CTREPCM};
   //{Module type, int channel}
+
+  XboxController *m_controller{0};
+
   Solenoid grabberPiston{PneumaticsModuleType::CTREPCM, 1};
-}
+};

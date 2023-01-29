@@ -2,8 +2,6 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 #include "Robot.h"
-#include <fmt/core.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -56,8 +54,6 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  // Could we run these two in threads? 
-  // Eventually they might depend on one another...
   m_drive.TuxDrive();
   m_arm.CheckControllerState();
 }

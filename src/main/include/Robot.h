@@ -5,7 +5,9 @@
 #include "Arm.h"
 #include "Drive.h"
 #include <string>
+#include <fmt/core.h>
 #include <frc/TimedRobot.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
 using namespace std;
 using namespace frc;

@@ -25,16 +25,17 @@ void Arm::ResetPosition() {
     /** TODO: Figure out method to stop motor when hitting something or
      * some intentional condition.
      * HAL- something maybe?
+     * Limit Switches?
      * Try not to stop by resistance, bad for motor
      */
-    return 1;
+    return;
 }
 
 void Arm::CheckControllerState() {
-    if(m_controller.GetRightBumperPressed()) {
+    if(m_controller->GetRightBumperPressed()) {
         MoveToPosition(1);
     }
-    else if (m_controller.GetLeftBumperPressed()) {
+    else if (m_controller->GetLeftBumperPressed()) {
         MoveToPosition(2);
     }
     else { //Delete this after testing. We do not want arm to reset on its own.
@@ -57,7 +58,7 @@ void Arm::ArmThirdPosition() {}
 
 //Grabber Functions
 void Arm::HandleGrabber() {
-    if(m_controller.GetAButtonPressed()) {
+    if(m_controller->GetAButtonPressed()) {
         grabberPiston.Toggle();
     }
 }
