@@ -20,13 +20,11 @@ class Arm {
  private:
   //int deviceNumber
   WPI_TalonSRX armController{ARM_MOTOR_CONTROLLER};
-
   //Define the Compressor and Pneumatic Piston that controls grabber
   //{int compressor, module type}
   Compressor pcmCompressor{PNEUMATICS, PneumaticsModuleType::CTREPCM};
   //{Module type, int channel}
+  Solenoid grabberPiston{PneumaticsModuleType::CTREPCM, 1};
 
   XboxController *m_controller{0};
-
-  Solenoid grabberPiston{PneumaticsModuleType::CTREPCM, 1};
 };
