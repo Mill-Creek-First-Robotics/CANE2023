@@ -30,7 +30,7 @@ void Arm::CheckControllerState() {
     if((*arm_controller)->GetRightBumperPressed()) {
         // "->" dereferences object to access member | same as (*object).member | arm_controller is a double pointer so
         // we need to manually dereference it then dereference it again with -> to access the member (because ->-> doesn't exist), Wow. 
-        // (*(*object)).method(); should also work.
+        // (*(*object)).member(); should also work.
         MoveToPosition(1);
     }
     else if ((*arm_controller)->GetLeftBumperPressed()) {

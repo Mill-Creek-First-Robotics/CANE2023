@@ -32,6 +32,6 @@ class Arm {
   //{Module type, int channel}
   Solenoid grabberPiston{PneumaticsModuleType::CTREPCM, 1};
 
-  DifferentialDrive **arm_drive;   //We will be pointing to a pointer
+  DifferentialDrive **arm_drive;   //We will be pointing to a pointer. Fun. 2 *should be* as far as it gets.
   XboxController **arm_controller;
 };
