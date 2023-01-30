@@ -37,7 +37,7 @@ void Arm::CheckControllerState() {
         MoveToPosition(2);
     }
     else { //Delete this after testing. We do not want arm to reset on its own.
-        armController.Set(0.0);
+        arm.Set(0.0);
     }
     HandleGrabber();
 }
@@ -45,11 +45,11 @@ void Arm::CheckControllerState() {
 //This & ArmSecondPosition are for testing.
 //TODO: Test that motor rotates forward and back with right/left bumper presses.
 void Arm::ArmFirstPosition() {
-    armController.Set(1.0); //Move forwards
+    arm.Set(1.0); //Move forwards
 }
 
 void Arm::ArmSecondPosition() {
-    armController.Set(-1.0); //Move backwards
+    arm.Set(-1.0); //Move backwards
 }
 
 void Arm::ArmThirdPosition() {}

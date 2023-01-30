@@ -1,5 +1,12 @@
 #include "Drive.h"
 
+Drive::Drive() {
+    startTime = m_timer.GetFPGATimestamp();
+    m_left.SetInverted(true);
+    m_driveptr = &m_drivetrain; //Yay! We now have something to point to. Thats why this is in the constructor.
+    m_controlptr = &m_controller;
+}
+
 void Drive::TuxDrive() {
     m_drivetrain.ArcadeDrive(m_controller.GetLeftY(),-m_controller.GetRightX() * 0.6);
 }

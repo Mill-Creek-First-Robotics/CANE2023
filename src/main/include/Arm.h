@@ -25,12 +25,12 @@ class Arm {
   void HandleGrabber();
  private:
   //int deviceNumber
-  WPI_TalonSRX armController{ARM_MOTOR_CONTROLLER};
+  WPI_TalonSRX arm{ARM_MOTOR_CONTROLLER};
   //Define the Compressor and Pneumatic Piston that controls grabber
   //{int compressor, module type}
   Compressor pcmCompressor{PNEUMATICS, PneumaticsModuleType::CTREPCM};
   //{Module type, int channel}
-  Solenoid grabberPiston{PneumaticsModuleType::CTREPCM, 0};
+  Solenoid grabberPiston{PneumaticsModuleType::CTREPCM, SOLENOID};
 
   DifferentialDrive **arm_drive;   //We will be pointing to a pointer. Fun. 2 *should be* as far as it gets.
   XboxController **arm_controller;
