@@ -4,6 +4,7 @@
 #pragma once
 #include "Arm.h"
 #include "Drive.h"
+#include "Constants.h"
 #include <string>
 #include <fmt/core.h>
 #include <frc/TimedRobot.h>
@@ -33,7 +34,7 @@ class Robot : public TimedRobot {
   string const kAutoNameCustom = "My Auto";
   string m_autoSelected;
   //Drivetrain
-  Drive m_drive{};
+  Drive m_drive{FRONT_LEFT_MOTOR,BACK_LEFT_MOTOR,FRONT_RIGHT_MOTOR,BACK_RIGHT_MOTOR,CONTROLLER};
   //Arm & Grabber
-  Arm m_arm{};
+  Arm m_arm{m_drive.getController(), m_drive.getDrive()};
 };

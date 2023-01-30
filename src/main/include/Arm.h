@@ -5,11 +5,17 @@
 #include <frc/Compressor.h>
 #include <frc/XboxController.h>
 #include <frc/PneumaticsModuleType.h>
+#include <frc/drive/DifferentialDrive.h>
 using namespace frc;
 
 class Arm {
  public:
-  Arm();
+  Arm(XboxController *a, DifferentialDrive *b){
+    arm_drive = &b; //pointer pointer = reference pointer. normally pointer = reference. Add pointer to both sides!
+    arm_controller = &a;
+    pcmCompressor.Disable();
+    pcmCompressor.EnableDigital();
+  };
   void MoveToPosition(int pos);
   void CheckControllerState();
   void ArmFirstPosition();
@@ -26,5 +32,6 @@ class Arm {
   //{Module type, int channel}
   Solenoid grabberPiston{PneumaticsModuleType::CTREPCM, 1};
 
-  XboxController *m_controller{0};
+  DifferentialDrive **arm_drive;   //We will be pointing to a pointer
+  XboxController **arm_controller;
 };

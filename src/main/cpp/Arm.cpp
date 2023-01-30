@@ -1,10 +1,5 @@
 #include "Arm.h"
 
-Arm::Arm() { //Constructor
-    pcmCompressor.Disable();
-    pcmCompressor.EnableDigital();
-}
-
 void Arm::MoveToPosition(int pos) {
     switch(pos) {
     case 1:
@@ -32,10 +27,13 @@ void Arm::ResetPosition() {
 }
 
 void Arm::CheckControllerState() {
-    if(m_controller->GetRightBumperPressed()) {
+    if((*arm_controller)->GetRightBumperPressed()) {
+        // "->" dereferences object to access member | same as (*object).member | arm_controller is a double pointer so
+        // we need to manually dereference it then dereference it again with -> to access the member (because ->-> doesn't exist), Wow. 
+        // (*(*object)).method(); should also work.
         MoveToPosition(1);
     }
-    else if (m_controller->GetLeftBumperPressed()) {
+    else if ((*arm_controller)->GetLeftBumperPressed()) {
         MoveToPosition(2);
     }
     else { //Delete this after testing. We do not want arm to reset on its own.
@@ -58,7 +56,7 @@ void Arm::ArmThirdPosition() {}
 
 //Grabber Functions
 void Arm::HandleGrabber() {
-    if(m_controller->GetAButtonPressed()) {
+    if((*arm_controller)->GetAButtonPressed()) {
         grabberPiston.Toggle();
     }
 }

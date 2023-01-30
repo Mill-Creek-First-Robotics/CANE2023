@@ -1,12 +1,7 @@
 #include "Drive.h"
 
-Drive::Drive() {
-    startTime = m_timer.GetFPGATimestamp();
-    m_left.SetInverted(true);
-}
-
 void Drive::TuxDrive() {
-    m_drivetrain.ArcadeDrive(m_controller->GetLeftY(),-m_controller->GetRightX() * 0.6);
+    m_drivetrain.ArcadeDrive(m_controller.GetLeftY(),-m_controller.GetRightX() * 0.6);
 }
 
 void Drive::Autonomous() {
