@@ -31,31 +31,31 @@ void Robot::RobotPeriodic() {}
  * make sure to add them to the chooser code above as well.
  */
 void Robot::AutonomousInit() {
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  fmt::print("Auto selected: {}\n", m_autoSelected);
+  // m_autoSelected = m_chooser->GetSelected();
+  // // m_autoSelected = SmartDashboard::GetString("Auto Selector",
+  // //     kAutoNameDefault);
+  // fmt::print("Auto selected: {}\n", m_autoSelected);
 
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    m_drive.TimerReset();
-  }
+  // if (m_autoSelected == kAutoNameCustom) {
+  //   // Custom Auto goes here
+  // } else {
+  //   m_drive->TimerReset();
+  // }
 }
 
 void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    m_drive.Autonomous();
-  }
+  // if (m_autoSelected == kAutoNameCustom) {
+  //   // Custom Auto goes here
+  // } else {
+  //   m_drive->Autonomous();
+  // }
 }
 
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  m_drive.TuxDrive();
-  m_arm.CheckControllerState();
+  m_drive->TuxDrive();
+  m_arm->CheckControllerState();
 }
 
 void Robot::DisabledInit() {}

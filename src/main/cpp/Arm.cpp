@@ -27,17 +27,17 @@ void Arm::ResetPosition() {
 }
 
 void Arm::CheckControllerState() {
-    if((*arm_controller)->GetRightBumperPressed()) {
+    if((*this->arm_controller)->GetRightBumperPressed()) {
         // "->" dereferences object to access member | same as (*object).member | arm_controller is a double pointer so
         // we need to manually dereference it then dereference it again with -> to access the member (because ->-> doesn't exist), Wow. 
         // (*(*object)).member(); should also work.
         MoveToPosition(1);
     }
-    else if ((*arm_controller)->GetLeftBumperPressed()) {
+    else if ((*this->arm_controller)->GetLeftBumperPressed()) {
         MoveToPosition(2);
     }
     else { //Delete this after testing. We do not want arm to reset on its own.
-        arm.Set(0.0);
+        this->arm->Set(0.0);
     }
     HandleGrabber();
 }
@@ -45,18 +45,18 @@ void Arm::CheckControllerState() {
 //This & ArmSecondPosition are for testing.
 //TODO: Test that motor rotates forward and back with right/left bumper presses.
 void Arm::ArmFirstPosition() {
-    arm.Set(1.0); //Move forwards
+    this->arm->Set(1.0); //Move forwards
 }
 
 void Arm::ArmSecondPosition() {
-    arm.Set(-1.0); //Move backwards
+    this->arm->Set(-1.0); //Move backwards
 }
 
 void Arm::ArmThirdPosition() {}
 
 //Grabber Functions
 void Arm::HandleGrabber() {
-    if((*arm_controller)->GetAButtonPressed()) {
-        grabberPiston.Toggle();
+    if((*this->arm_controller)->GetAButtonPressed()) {
+        this->grabberPiston->Toggle();
     }
 }

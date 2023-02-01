@@ -1,15 +1,20 @@
 #pragma once
 
-//TalonSRX Motor Controller for the Bosch Seat Motor.
-//Need to update when actually wired.
-int const ARM_MOTOR_CONTROLLER = 0;
-int const PNEUMATICS = 0;
-int const SOLENOID = 0;
+int const COMPRESSOR = 0;
 
-int const FRONT_LEFT_MOTOR = 13;
-int const BACK_LEFT_MOTOR = 12;
-int const FRONT_RIGHT_MOTOR = 2;
-int const BACK_RIGHT_MOTOR = 1;
+//Enums so we don't have to restructure this later
+enum Controller {
+    XBOX_CONTROLLER = 0
+};
 
-//(int index) as defined in driverstation
-int const CONTROLLER = 0; 
+enum MotorControllerSRX {
+    ARM_MOTOR_CONTROLLER = 0,
+    BACK_RIGHT_MOTOR,
+    FRONT_RIGHT_MOTOR,
+    BACK_LEFT_MOTOR = 13,
+    FRONT_LEFT_MOTOR
+};
+
+enum ChannelSolenoid {
+    ARM_SOLENOID = 0
+};

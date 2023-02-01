@@ -34,7 +34,7 @@ class Robot : public TimedRobot {
   string const kAutoNameCustom = "My Auto";
   string m_autoSelected;
   //Drivetrain
-  Drive m_drive{};
+  Drive *m_drive = new Drive();
   //Arm & Grabber
-  Arm m_arm{m_drive.getController(), m_drive.getDrive()};
+  Arm *m_arm = new Arm{m_drive->getController(), m_drive->getDrive()};
 };

@@ -17,29 +17,30 @@ class Drive {
   void Autonomous();
   void TimerReset();
   XboxController *getController() {
-    return m_controlptr;
+    return this->m_controller;
   }
   DifferentialDrive *getDrive() {
-    return m_driveptr;
+    return this->m_drivetrain;
   }
  private:
   //This is where the core/essential variables are defined. Used normally here, used as pointers everywhere else.
   //Left Motors
-  WPI_TalonSRX m_frontLeft{FRONT_LEFT_MOTOR};
-  WPI_TalonSRX m_backLeft{BACK_LEFT_MOTOR};
-  MotorControllerGroup m_left{m_frontLeft, m_backLeft};
+  // type name = new type(args); means dynamic allocation. Object is deleted when we explicitly say so, useful to avoid scope errors.
+  WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(MotorControllerSRX::FRONT_LEFT_MOTOR);
+  WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(MotorControllerSRX::BACK_LEFT_MOTOR);
+  MotorControllerGroup *m_left = new MotorControllerGroup(*m_frontLeft, *m_backLeft);
 
   //Right Motors
-  WPI_TalonSRX m_frontRight{FRONT_RIGHT_MOTOR};
-  WPI_TalonSRX m_backRight{BACK_RIGHT_MOTOR};
-  MotorControllerGroup m_right{m_frontRight, m_backRight};
+  WPI_TalonSRX *m_frontRight = new WPI_TalonSRX(MotorControllerSRX::FRONT_RIGHT_MOTOR);
+  WPI_TalonSRX *m_backRight = new WPI_TalonSRX(MotorControllerSRX::BACK_RIGHT_MOTOR);
+  MotorControllerGroup *m_right = new MotorControllerGroup(*m_frontRight, *m_backRight);
 
   //Create a differential drive using the two previously defined motor groups.
-  DifferentialDrive m_drivetrain{m_left, m_right};
-  DifferentialDrive *m_driveptr;
+  DifferentialDrive *m_drivetrain = new DifferentialDrive(*m_left, *m_right);
+  //DifferentialDrive *m_driveptr;
   
-  XboxController m_controller{CONTROLLER};
-  XboxController *m_controlptr;
+  XboxController *m_controller = new XboxController(Controller::XBOX_CONTROLLER);
+  //XboxController *m_controlptr;
   
   /** Button Bindings Overview:
   *  Left Joystick y-axis = move robot forward/back
@@ -49,6 +50,7 @@ class Drive {
   *  //
   *  //
   */
-  Timer m_timer;
-  units::second_t startTime;
+ 
+  // Timer *m_timer; //I have no clue if this can be a pointer or not.
+  // units::second_t *startTime;
 };
