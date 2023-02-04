@@ -10,7 +10,7 @@ using namespace frc;
 
 class Arm {
  public:
-  Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w);
+  Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w, WPI_TalonSRX *e);
   void MoveToPosition(int pos);
   void CheckControllerState();
   void ArmFirstPosition();
@@ -23,6 +23,7 @@ class Arm {
   DifferentialDrive *armDrive;
   Solenoid *armGrabberPiston;
   WPI_TalonSRX *armJoint;
+  WPI_TalonSRX *armExtension;
 
   bool isMoving;
 };

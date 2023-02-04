@@ -10,7 +10,7 @@ enum Controller {
 
 enum MotorControllerSRX {
     ARM_MOTOR_CONTROLLER = 0,
-    BACK_RIGHT_MOTOR,
+    BACK_RIGHT_MOTOR = 1,
     FRONT_RIGHT_MOTOR,
     BACK_LEFT_MOTOR = 13,
     FRONT_LEFT_MOTOR

@@ -1,11 +1,12 @@
 #include "Arm.h"
 
-Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w)
+Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w, WPI_TalonSRX *e)
 : //Initializer list
 armController(x),       //armController = x; 
 armDrive(d),            //armDrive = d; etc...
 armGrabberPiston(s),
-armJoint(w)
+armJoint(w),
+armExtension(e)
 {
   //Contructor Body (required)
 };
@@ -54,6 +55,13 @@ void Arm::CheckControllerState() {
         armJoint->Set(0.0);
     }
     HandleGrabber();
+
+    if (armController->GetRightTriggerPressed()) {
+        ArmExtend();
+    }
+    else if (armControlelr->GetLeftTriggerPressed()) {
+        
+    }
 }
 //Arm positions
 //This & ArmSecondPosition are for testing.
@@ -73,4 +81,12 @@ void Arm::HandleGrabber() {
     if(armController->GetAButtonPressed()) {
         armGrabberPiston->Toggle();
     }
+}
+
+void Arm::ArmExtend() {
+
+}
+
+void Arm::ArmRetract() {
+
 }

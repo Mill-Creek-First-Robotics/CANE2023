@@ -71,19 +71,21 @@ class Robot : public TimedRobot {
 
   /* --=[ ARM & GRABBER ]=-- */
   //int deviceNumber
-  WPI_TalonSRX *armJoint = new WPI_TalonSRX(MotorControllerSRX::ARM_MOTOR_CONTROLLER);
+  WPI_TalonSRX *armJoint = new WPI_TalonSRX(MotorControllerSRX::ARM_JOINT_MOTOR_CONTROLLER);
+  WPI_TalonSRX *armExtension = new WPI_TalonSRX(MotorControllerSRX::ARM_EXTENSION_MOTOR_CONTROLLER);
   //Define the Compressor and Pneumatic Piston that controls grabber
   //{int compressor, module type}
   Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
   //{Module type, int channel}
   Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
-
+  //XboxController 
   Arm *m_arm = new Arm
     (
-      this->m_controller,
+      this->m_controller,  //armController
       this->m_drivetrain,
       this->grabberPiston,
-      this->armJoint
+      this->armJoint,
+      this->armExtension
     );
   /* --=[###############]=-- */
 };
