@@ -56,11 +56,11 @@ void Arm::CheckControllerState() {
     }
     HandleGrabber();
 
-    if (armController->GetRightTriggerPressed()) {
+    if (armController->GetRightTriggerAxis() > 0) {
         ArmExtend();
     }
-    else if (armControlelr->GetLeftTriggerPressed()) {
-        
+    else if (armController->GetLeftTriggerAxis() > 0) {
+        ArmRetract();
     }
 }
 //Arm positions
@@ -84,9 +84,9 @@ void Arm::HandleGrabber() {
 }
 
 void Arm::ArmExtend() {
-
+    armExtension.set(1.0);
 }
 
 void Arm::ArmRetract() {
-
+    armExtension.set(-1.0);
 }
