@@ -29,12 +29,61 @@ class Robot : public TimedRobot {
   void SimulationPeriodic() override;
 
  private:
+  /* --=[ DEFAULT VARIABLES ]=-- */
   SendableChooser<string> m_chooser;
   string const kAutoNameDefault = "Default";
   string const kAutoNameCustom = "My Auto";
   string m_autoSelected;
-  //Drivetrain
-  Drive *m_drive = new Drive();
-  //Arm & Grabber
-  Arm *m_arm = new Arm{m_drive->getController(), m_drive->getDrive()};
+  /* --=[###################]=-- */
+
+  /* --=[ DRIVETRAIN ]=-- */
+  //Left Motors
+  // type name = new type(args); means dynamic allocation. Object is deleted when we explicitly say so, useful to avoid scope errors.
+  WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(MotorControllerSRX::FRONT_LEFT_MOTOR);
+  WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(MotorControllerSRX::BACK_LEFT_MOTOR);
+  MotorControllerGroup *m_left = new MotorControllerGroup(*m_frontLeft, *m_backLeft);
+
+  //Right Motors
+  WPI_TalonSRX *m_frontRight = new WPI_TalonSRX(MotorControllerSRX::FRONT_RIGHT_MOTOR);
+  WPI_TalonSRX *m_backRight = new WPI_TalonSRX(MotorControllerSRX::BACK_RIGHT_MOTOR);
+  MotorControllerGroup *m_right = new MotorControllerGroup(*m_frontRight, *m_backRight);
+
+  //Create a differential drive using the two previously defined motor groups.
+  DifferentialDrive *m_drivetrain = new DifferentialDrive(*m_left, *m_right);
+  
+  XboxController *m_controller = new XboxController(Controller::DRIVE_XBOX_CONTROLLER);
+  /** Button Bindings Overview:
+  *  Left Joystick y-axis = move robot forward/back
+  *  Right Joystick x-axis = rotate robot left/right
+  *  'A' button = toggle the grabber pneumatics extended/retracted
+  *  //
+  *  //
+  *  //
+  */
+  // Timer *m_timer; //I have no clue if this can be a pointer or not.
+  // units::second_t *startTime;
+  Drive *m_drive = new Drive
+    (
+      this->m_drivetrain,
+      this->m_controller
+    );
+  /* --=[############]=-- */
+
+  /* --=[ ARM & GRABBER ]=-- */
+  //int deviceNumber
+  WPI_TalonSRX *armJoint = new WPI_TalonSRX(MotorControllerSRX::ARM_MOTOR_CONTROLLER);
+  //Define the Compressor and Pneumatic Piston that controls grabber
+  //{int compressor, module type}
+  Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
+  //{Module type, int channel}
+  Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
+
+  Arm *m_arm = new Arm
+    (
+      this->m_controller,
+      this->m_drivetrain,
+      this->grabberPiston,
+      this->armJoint
+    );
+  /* --=[###############]=-- */
 };

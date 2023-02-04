@@ -1,12 +1,15 @@
 #include "Drive.h"
 
-Drive::Drive() {
+Drive::Drive(DifferentialDrive *d, XboxController *x)
+:
+drive(d),
+controller(x) 
+{
     // this->startTime = this->m_timer->GetFPGATimestamp();
-    this->m_left->SetInverted(true);
 }
 
 void Drive::TuxDrive() {
-    this->m_drivetrain->ArcadeDrive(this->m_controller->GetLeftY(),-this->m_controller->GetRightX() * 0.6);
+    drive->ArcadeDrive(controller->GetLeftY(),-controller->GetRightX() * 0.6);
 }
 
 void Drive::Autonomous() {

@@ -4,7 +4,8 @@ int const COMPRESSOR = 0;
 
 //Enums so we don't have to restructure this later
 enum Controller {
-    XBOX_CONTROLLER = 0
+    DRIVE_XBOX_CONTROLLER = 0,
+    ARM_XBOX_CONTROLLER
 };
 
 enum MotorControllerSRX {
