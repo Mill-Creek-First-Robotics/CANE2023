@@ -37,8 +37,9 @@ class Robot : public TimedRobot {
   /* --=[###################]=-- */
 
   /* --=[ DRIVETRAIN ]=-- */
-  //Left Motors
   // type name = new type(args); means dynamic allocation. Object is deleted when we explicitly say so, useful to avoid scope errors.
+  // new keyword also *always* returns a pointer.
+  //Left Motors
   WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(MotorControllerSRX::FRONT_LEFT_MOTOR);
   WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(MotorControllerSRX::BACK_LEFT_MOTOR);
   MotorControllerGroup *m_left = new MotorControllerGroup(*m_frontLeft, *m_backLeft);
@@ -51,6 +52,7 @@ class Robot : public TimedRobot {
   //Create a differential drive using the two previously defined motor groups.
   DifferentialDrive *m_drivetrain = new DifferentialDrive(*m_left, *m_right);
   
+  //Drivetrain Controller.
   XboxController *m_controller = new XboxController(Controller::DRIVE_XBOX_CONTROLLER);
   /** Button Bindings Overview:
   *  Left Joystick y-axis = move robot forward/back
@@ -78,7 +80,7 @@ class Robot : public TimedRobot {
   Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
   //{Module type, int channel}
   Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
-  //XboxController 
+  // XboxController *armController = new XboxController(Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
   Arm *m_arm = new Arm
     (
       this->m_controller,  //armController

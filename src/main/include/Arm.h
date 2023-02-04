@@ -18,6 +18,8 @@ class Arm {
   void ArmThirdPosition();
   void ResetPosition();
   void HandleGrabber();
+  void ArmExtend();
+  void ArmRetract();
  private:
   XboxController *armController;
   DifferentialDrive *armDrive;
@@ -25,5 +27,5 @@ class Arm {
   WPI_TalonSRX *armJoint;
   WPI_TalonSRX *armExtension;
 
-  bool isMoving;
+  bool armIsMoving;
 };

@@ -8,8 +8,8 @@ armGrabberPiston(s),
 armJoint(w),
 armExtension(e)
 {
-  //Contructor Body (required)
-};
+  //Contructor Body
+}
 
 void Arm::MoveToPosition(int pos) {
     switch(pos) {
@@ -28,9 +28,12 @@ void Arm::MoveToPosition(int pos) {
 }
 
 void Arm::ResetPosition() {
-    isMoving = true;
-    while(isMoving) {
-        isMoving = false;
+    armIsMoving = true;
+    while(armIsMoving) {
+        //move motor to reset position
+        //if (armHasReachedTarget) {
+        armIsMoving = false;
+        //}
     }
     /** TODO: Figure out method to stop motor when hitting something or
      * some intentional condition.
@@ -43,9 +46,7 @@ void Arm::ResetPosition() {
 
 void Arm::CheckControllerState() {
     if(armController->GetRightBumperPressed()) {
-        // "->" dereferences object to access member | same as (*object).member | arm_controller is a double pointer so
-        // we need to manually dereference it then dereference it again with -> to access the member (because ->-> doesn't exist), Wow. 
-        // (*(*object)).member(); should also work.
+        // "->" dereferences object to access member | same as (*object).member
         MoveToPosition(1);
     }
     else if (armController->GetLeftBumperPressed()) {
@@ -54,7 +55,11 @@ void Arm::CheckControllerState() {
     else { //Delete this after testing. We do not want arm to reset on its own.
         armJoint->Set(0.0);
     }
-    HandleGrabber();
+
+    /** TODO: Find a way to "get button held down". 
+     * Might need a loop or a "get button released"
+     * and some booleans to toggle.
+     */
 
     if (armController->GetRightTriggerAxis() > 0) {
         ArmExtend();
@@ -62,10 +67,11 @@ void Arm::CheckControllerState() {
     else if (armController->GetLeftTriggerAxis() > 0) {
         ArmRetract();
     }
+
+    HandleGrabber();
 }
 //Arm positions
 //This & ArmSecondPosition are for testing.
-//TODO: Test that motor rotates forward and back with right/left bumper presses.
 void Arm::ArmFirstPosition() {
     armJoint->Set(1.0); //Move forwards
 }
@@ -84,9 +90,9 @@ void Arm::HandleGrabber() {
 }
 
 void Arm::ArmExtend() {
-    armExtension.set(1.0);
+    armExtension->Set(1.0);
 }
 
 void Arm::ArmRetract() {
-    armExtension.set(-1.0);
+    armExtension->Set(-1.0);
 }
