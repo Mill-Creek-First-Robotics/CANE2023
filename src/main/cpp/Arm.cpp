@@ -84,9 +84,9 @@ void Arm::HandleGrabber() {
 }
 
 void Arm::ArmExtend() {
-    armExtension.set(1.0);
+    armExtension->Set(1.0);
 }
 
 void Arm::ArmRetract() {
-    armExtension.set(-1.0);
+    armExtension->Set(-1.0);
 }

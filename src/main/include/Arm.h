@@ -16,6 +16,8 @@ class Arm {
   void ArmFirstPosition();
   void ArmSecondPosition();
   void ArmThirdPosition();
+  void ArmExtend();
+  void ArmRetract();
   void ResetPosition();
   void HandleGrabber();
  private:
