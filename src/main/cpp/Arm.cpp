@@ -73,11 +73,18 @@ void Arm::CheckControllerState() {
 //Arm positions
 //This & ArmSecondPosition are for testing.
 void Arm::ArmFirstPosition() {
-    armJoint->Set(1.0); //Move forwards
+    //When bumper is released, escape loop, return flow of control to CheckControllerState.
+    //Returns true when let go, escaping loop because of the "!"
+    //My way of implementing a "Get button held down"
+    while(!armController->GetRightBumperReleased()) {
+        armJoint->Set(1.0); //Move forwards
+    }
 }
 
 void Arm::ArmSecondPosition() {
-    armJoint->Set(-1.0); //Move backwards
+    while(!armController->GetLeftBumperReleased()) {
+        armJoint->Set(-1.0); //Move backwards
+    }
 }
 
 void Arm::ArmThirdPosition() {}
@@ -90,9 +97,13 @@ void Arm::HandleGrabber() {
 }
 
 void Arm::ArmExtend() {
-    armExtension->Set(1.0);
+    while(armController->GetRightTriggerAxis() > 0) { //Is held down.
+        armExtension->Set(1.0);
+    }
 }
 
 void Arm::ArmRetract() {
-    armExtension->Set(-1.0);
+    while(armController->GetLeftTriggerAxis() > 0) {
+        armExtension->Set(-1.0);
+    }
 }
