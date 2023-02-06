@@ -36,6 +36,7 @@ class Arm {
   WPI_TalonSRX *armJoint;
   WPI_TalonSRX *armExtension;
   Encoder *armEncoder;
+  VictorSPX *vector = new VictorSPX(MotorControllerSRX::TEST_VICTOR_COPY);
 
   bool armIsMoving;
 };

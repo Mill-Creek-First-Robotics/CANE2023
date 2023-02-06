@@ -70,6 +70,10 @@ void Arm::CheckControllerState() {
     }
 
     HandleGrabber();
+
+    if(armController->GetBButtonPressed()) {
+        vector->Set(ControlMode::PercentOutput, 1.0);
+    }
 }
 //Arm positions
 //This & ArmSecondPosition are for testing.

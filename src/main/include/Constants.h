@@ -9,6 +9,7 @@ enum Controller {
 };
 
 enum MotorControllerSRX {
+    TEST_VICTOR_COPY = 0,
     ARM_EXTENSION_MOTOR_CONTROLLER = 0,
     ARM_JOINT_MOTOR_CONTROLLER = 45,
     BACK_RIGHT_MOTOR = 1,
