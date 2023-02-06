@@ -14,7 +14,9 @@ enum MotorControllerSRX {
     BACK_RIGHT_MOTOR = 1,
     FRONT_RIGHT_MOTOR,
     BACK_LEFT_MOTOR = 13,
-    FRONT_LEFT_MOTOR
+    FRONT_LEFT_MOTOR,
+    ENCODER_ACHANNEL,
+    ENCODER_BCHANNEL
 };
 
 enum ChannelSolenoid {

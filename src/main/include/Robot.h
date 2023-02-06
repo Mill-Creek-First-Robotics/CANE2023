@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include <string>
 #include <fmt/core.h>
+#include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -80,6 +81,8 @@ class Robot : public TimedRobot {
   Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
   //{Module type, int channel}
   Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
+  //(int achannel, int bchannel, bool reverseDirection, EncodingType type)
+  Encoder *armEncoder = new Encoder(MotorControllerSRX::ENCODER_ACHANNEL, MotorControllerSRX::ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
   // XboxController *armController = new XboxController(Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
   Arm *m_arm = new Arm
     (
@@ -87,7 +90,8 @@ class Robot : public TimedRobot {
       this->m_drivetrain,
       this->grabberPiston,
       this->armJoint,
-      this->armExtension
+      this->armExtension,
+      this->armEncoder
     );
   /* --=[###############]=-- */
 };

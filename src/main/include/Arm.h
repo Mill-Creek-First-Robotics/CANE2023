@@ -1,6 +1,9 @@
 #pragma once
+
 #include "Constants.h"
 #include "ctre/Phoenix.h"
+
+#include <frc/Encoder.h>
 #include <frc/Solenoid.h>
 #include <frc/Compressor.h>
 #include <frc/XboxController.h>
@@ -10,7 +13,13 @@ using namespace frc;
 
 class Arm {
  public:
-  Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w, WPI_TalonSRX *e);
+  Arm(XboxController *x,
+      DifferentialDrive *d,
+      Solenoid *s,
+      WPI_TalonSRX *w,
+      WPI_TalonSRX *e,
+      Encoder *r
+    );
   void MoveToPosition(int pos);
   void CheckControllerState();
   void ArmFirstPosition();
@@ -26,6 +35,7 @@ class Arm {
   Solenoid *armGrabberPiston;
   WPI_TalonSRX *armJoint;
   WPI_TalonSRX *armExtension;
+  Encoder *armEncoder;
 
   bool armIsMoving;
 };

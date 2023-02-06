@@ -1,12 +1,13 @@
 #include "Arm.h"
 
-Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w, WPI_TalonSRX *e)
+Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w, WPI_TalonSRX *e, Encoder *r)
 : //Initializer list
 armController(x),       //armController = x; 
 armDrive(d),            //armDrive = d; etc...
 armGrabberPiston(s),
 armJoint(w),
-armExtension(e)
+armExtension(e),
+armEncoder(r)
 {
   //Contructor Body
 }
