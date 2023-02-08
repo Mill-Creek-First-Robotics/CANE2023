@@ -29,6 +29,7 @@ class Arm {
   void HandleGrabber();
   void ArmExtend();
   void ArmRetract();
+  void MoveVectorMotor(double speed);
  private:
   XboxController *armController;
   DifferentialDrive *armDrive;
@@ -38,5 +39,10 @@ class Arm {
   Encoder *armEncoder;
   VictorSPX *vector = new VictorSPX(MotorControllerSRX::TEST_VICTOR_COPY);
 
-  bool armIsMoving;
+  bool armMovingForward;
+  bool armMovingBackward;
+  bool armIsResetting;
+  bool armIsExtending;
+  bool armIsRetracting;
+  bool armVectorIsMoving;
 };
