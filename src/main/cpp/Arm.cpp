@@ -1,14 +1,15 @@
 #include "Arm.h"
 
 Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w,
-         WPI_TalonSRX *e, Encoder *r)
+         WPI_TalonSRX *e, Encoder *r, Encoder *o)
 :                   // Initializer list
 armController(x), // armController = x;
 armDrive(d),      // armDrive = d; etc...
 armGrabberPiston(s),
 armJoint(w),
 armExtension(e),
-armEncoder(r)
+armJointEncoder(r),
+armExtensionEncoder(o)
 { // Contructor Body
   armMovingForward = false;
   armMovingBackward = false;
@@ -65,12 +66,14 @@ void Arm::CheckControllerState() {
   // === END LOOP CONDITIONS ===
 
   // ===== IF "LOOPS" =====
+  //make sure that if both buttons are pressed, arm doesn't try to move both ways
   if (armMovingForward && !armMovingBackward) {
     armJoint->Set(1.0);
   }
-  else if (!armMovingBackward) {
+  else if (!armMovingBackward) {//arm isn't currently trying to move back
     armJoint->Set(0.0);
   }
+
   if (armMovingBackward && !armMovingForward) {
     armJoint->Set(-1.0);
   }
@@ -128,7 +131,7 @@ void Arm::HandleGrabber() {
 
 void Arm::ArmExtend() {
   if(armIsExtending && !armIsRetracting) {
-    armExtension->Set(1.0);
+    armExtension->Set(0.1);
   }
   else if (!armIsRetracting) {
     armExtension->Set(0.0);
@@ -137,7 +140,7 @@ void Arm::ArmExtend() {
 
 void Arm::ArmRetract() {
   if(armIsRetracting && !armIsExtending) {
-    armExtension->Set(-1.0);
+    armExtension->Set(-0.5);
   }
   else if (!armIsExtending) {
     armExtension->Set(0.0);

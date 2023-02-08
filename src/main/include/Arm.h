@@ -18,7 +18,8 @@ class Arm {
       Solenoid *s,
       WPI_TalonSRX *w,
       WPI_TalonSRX *e,
-      Encoder *r
+      Encoder *r,
+      Encoder *o
     );
   void MoveToPosition(int pos);
   void CheckControllerState();
@@ -36,7 +37,9 @@ class Arm {
   Solenoid *armGrabberPiston;
   WPI_TalonSRX *armJoint;
   WPI_TalonSRX *armExtension;
-  Encoder *armEncoder;
+  Encoder *armJointEncoder;
+  Encoder *armExtensionEncoder;
+
   VictorSPX *vector = new VictorSPX(MotorControllerSRX::TEST_VICTOR_COPY);
 
   bool armMovingForward;

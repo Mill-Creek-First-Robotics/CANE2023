@@ -82,7 +82,8 @@ class Robot : public TimedRobot {
   //{Module type, int channel}
   Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
   //(int achannel, int bchannel, bool reverseDirection, EncodingType type)
-  Encoder *armEncoder = new Encoder(MotorControllerSRX::ENCODER_ACHANNEL, MotorControllerSRX::ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
+  Encoder *armJointEncoder = new Encoder(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL, true, Encoder::EncodingType::k4X);
+  Encoder *armExtensionEncoder = new Encoder(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
   // XboxController *armController = new XboxController(Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
   Arm *m_arm = new Arm
     (
@@ -91,7 +92,8 @@ class Robot : public TimedRobot {
       this->grabberPiston,
       this->armJoint,
       this->armExtension,
-      this->armEncoder
+      this->armJointEncoder,
+      this->armExtensionEncoder
     );
   /* --=[###############]=-- */
 };
