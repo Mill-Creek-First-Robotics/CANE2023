@@ -1,3 +1,5 @@
+# ROBOT CODE DOCUMENTATION
+A *hopefully* useful and detailed walkthrough of team 6910's code for the 2023 Charged Up competition.
 # TABLE OF CONTENTS
 * NAMING/STYLE
 * Constants
