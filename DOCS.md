@@ -95,6 +95,89 @@ This is so that it is clear when member variables are used.
 
 # DRIVE
 
+The class Drive exists to simplify code, organize the project structure, and keep code out of Robot.cpp.
+Here is all the code for the Drive class declaration:
+```cpp
+//file Drive.h
+class Drive {
+ public:
+  Drive(DifferentialDrive *d, XboxController *x); //Constructor
+  void TuxDrive(); //Actual driving
+  void Autonomous();
+  void TimerReset();
+ private:
+  DifferentialDrive *drive;
+  XboxController *controller;
+};
+```
+The Drive constructor takes in two arguments, the types being DifferentialDrive and XboxController.
+Private members of type pointer are declared to store these arguments.
+In the Drive.cpp file, the definition or the bodies of each function are defined:
+```cpp
+#include "Drive.h"
+
+Drive::Drive(DifferentialDrive *d, XboxController *x)
+:
+drive(d),
+controller(x) 
+{
+  //Empty Constructor Body
+}
+
+void Drive::TuxDrive() {
+  drive->ArcadeDrive(controller->GetLeftY(),-controller->GetRightX() * 0.6);
+}
+
+void Drive::Autonomous() {
+
+}
+
+void Drive::TimerReset() {
+
+}
+```
+The scope operator "::" along with the class name and class member function are used to implement the functions defined in Drive.h. Of course, a type is still needed, which goes before the function name like normal. Type ClassName::ClassMember() {}
+The only exception to this is the constructor, which has no type, and is always just the class name.
+The constructor gets called when an instance of the object is created. An instance of the drive class is created in the Robot.h file as mentioned above.
+Lets focus in more on the unique syntax of the Drive constructor:
+```cpp
+Drive::Drive(DifferentialDrive *d, XboxController *x)
+:
+drive(d),
+controller(x) 
+{
+  //Empty Constructor Body
+}
+```
+This is called an initializer list. It sets the private drive and controller variables equal to the parameters of the same type. Syntax is:
+```cpp
+class ClassName {
+  public:
+    ClassName(type param1, type param2);
+  private:
+    type member1;
+    type member2;
+};
+//Here is an initializer list, defined outside of the class
+ClassName::ClassName(type param1, type param2) : member1(param1), member2(param2) {/* Constructor Body */}
+```
+And it looks like this when rewritten using the normal constructor syntax:
+```cpp
+class ClassName {
+  public:
+    ClassName(type param1, type param2);
+  private:
+    type member1;
+    type member2;
+};
+//Here is a normal constructor, defined outside of the class
+ClassName::ClassName(type param1, type param2) {
+  member1 = param1;
+  member2 = param2;
+}
+```
+Note: Initializer Lists CAN ONLY be defined off of the constructor of the class.
+
 # ROBOT PT2: THE ARM
 
 # ARM
