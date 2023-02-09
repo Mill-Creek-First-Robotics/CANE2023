@@ -1,15 +1,21 @@
 # TABLE OF CONTENTS
 * NAMING/STYLE
-* ROBOT
+* Constants
+* ROBOT PT1: The Drivetrain
 * DRIVE
+* ROBOT PT2: The Arm
 * ARM
 
-## NAMING/STYLE
+# NAMING/STYLE
 
-## ROBOT
+# CONSTANTS
 
-* In the Robot definition, you'll notice that we inherit from the TimedRobot class.
-  This provides our method/function templates such as RobotInit() and RobotPeriodic().
+# ROBOT PT1: THE DRIVETRAIN
+
+In the Robot definition, you'll notice that we inherit from the TimedRobot class.
+This provides our method/function templates such as RobotInit() and RobotPeriodic().
+The public keyword before TimedRobot means that current members of the TimedRobot class should be inherited as public members of the Robot derived class.
+When public members of TimedRobot are inherited with public, they stay public. Private stay private (are inaccesible from Robot class), and Protected remain protected.
 ```cpp
 class Robot : public TimedRobot {
   //...
@@ -19,9 +25,9 @@ In java, this would read as "class Robot extends TimedRobot", here the colon not
 the inheritance from TimedRobot.
 This will be the only time that inheritance is seen in the program.
 
-### Private variables
+## Private variables
 
-#### Default Template Variables
+### Default Template Variables
 
 The *DEFAULT VARIABLES* are variables included in the template project.
 ```cpp
@@ -32,7 +38,7 @@ string const kAutoNameCustom = "My Auto";
 string m_autoSelected;
 ```
 
-#### Drivetrain Definitions
+### Drivetrain Definitions
 
 Underneath those, the motor controllers for the drivetrain are defined:
 * We have what's called a differential drive
@@ -44,25 +50,23 @@ Underneath those, the motor controllers for the drivetrain are defined:
 WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(MotorControllerSRX::FRONT_LEFT_MOTOR);
 WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(MotorControllerSRX::BACK_LEFT_MOTOR);
 //MotorControllerSRX is an enum defined in constants.h
-//enums work similarly to constants and structs, for more info see:
-//
+//enums work similarly to constants and structs, for more info see the Constants section
 ```
-We define the two left and two right motor controllers, then group them:
+We define the two left and two right motor controllers, then group them, making sure to dereference the pointer variables m_frontLeft and m_backLeft by using the "\*" syntax.
 ```cpp
 //Grouping the left motor controllers defined above
 MotorControllerGroup *m_left = new MotorControllerGroup(*m_frontLeft, *m_backLeft);
 ```
-* These groups are defined by passing through the two controllers to group.
-* On line 54 (currently), the drivetrain is defined, taking in the two motor controller
-  groups.
+These groups are defined by passing through the two controllers to group.
+On line 54 (currently), the drivetrain is defined, taking in the two motor controller
+groups.
 ```cpp
 DifferentialDrive *m_drivetrain = new DifferentialDrive(*m_left, *m_right);
 ```
 Next, the XboxController is defined:
 ```cpp
 XboxController *m_controller = new XboxController(Controller::DRIVE_XBOX_CONTROLLER);
-//Controller::DRIVE_XBOX_CONTROLLER is another enum member. Accessed using the 
-//scope operator "::"
+//Controller::DRIVE_XBOX_CONTROLLER is another enum member. Accessed using the scope operator "::"
 ```
 Here are the current Button Bindings:
 * A = Toggle grabber (pneumatic piston)
@@ -74,7 +78,7 @@ Here are the current Button Bindings:
 * Left Joystick Y-Axis = Move robot forwards/backwards
 * Right Joystick X-Axis = Rotate robot left/right
 
-#### Drive Class Instance
+### Drive Class Instance
 
 Finally, we passthrough the drivetrain and the controller to the drive class, as defined in its constructor. More on that in the next section.
 ```cpp
@@ -87,4 +91,8 @@ Drive *m_drive = new Drive
 Note: The "this->" can be omitted, I personally like to use it to mark member variables.
 This is so that it is clear when member variables are used.
 
-## DRIVE
+# DRIVE
+
+# ROBOT PT2: THE ARM
+
+# ARM
