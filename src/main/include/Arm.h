@@ -42,6 +42,7 @@ class Arm {
   Encoder *armJointEncoder;
   Encoder *armExtensionEncoder;
 
+  //AOEIBGAOIEBGAEING ADKBFAELBG AILEBG A ILEUBG IAEULBG ILAEBG ILAIEBG ILAUEUBG 
   //Testing Victor Motor
   VictorSPX *vector = new VictorSPX(MotorControllerSRX::TEST_VICTOR_COPY);
 
