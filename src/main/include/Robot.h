@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include <string>
 #include <fmt/core.h>
+#include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -37,8 +38,9 @@ class Robot : public TimedRobot {
   /* --=[###################]=-- */
 
   /* --=[ DRIVETRAIN ]=-- */
-  //Left Motors
   // type name = new type(args); means dynamic allocation. Object is deleted when we explicitly say so, useful to avoid scope errors.
+  // new keyword also *always* returns a pointer.
+  //Left Motors
   WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(MotorControllerSRX::FRONT_LEFT_MOTOR);
   WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(MotorControllerSRX::BACK_LEFT_MOTOR);
   MotorControllerGroup *m_left = new MotorControllerGroup(*m_frontLeft, *m_backLeft);
@@ -51,15 +53,18 @@ class Robot : public TimedRobot {
   //Create a differential drive using the two previously defined motor groups.
   DifferentialDrive *m_drivetrain = new DifferentialDrive(*m_left, *m_right);
   
+  //Drivetrain Controller.
   XboxController *m_controller = new XboxController(Controller::DRIVE_XBOX_CONTROLLER);
-  /** Button Bindings Overview:
-  *  Left Joystick y-axis = move robot forward/back
-  *  Right Joystick x-axis = rotate robot left/right
-  *  'A' button = toggle the grabber pneumatics extended/retracted
-  *  //
-  *  //
-  *  //
-  */
+  /* Here are the current Button Bindings:
+   * A = Toggle grabber (pneumatic piston)
+   * X = Move arm upwards at the joint
+   * Y = Move arm downwards at the joint
+   * B = Move the vector motor (currently not in use, was just for testing, remains because of possible future testing)
+   * LB = Extend the arm, needs to be held
+   * RB = Retract the arm, also needs to be held
+   * Left Joystick Y-Axis = Move robot forwards/backwards
+   * Right Joystick X-Axis = Rotate robot left/right
+   */
   // Timer *m_timer; //I have no clue if this can be a pointer or not.
   // units::second_t *startTime;
   Drive *m_drive = new Drive
@@ -78,14 +83,19 @@ class Robot : public TimedRobot {
   Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
   //{Module type, int channel}
   Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
-  //XboxController 
+  //(int achannel, int bchannel, bool reverseDirection, EncodingType type)
+  Encoder *armJointEncoder = new Encoder(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL, true, Encoder::EncodingType::k4X);
+  Encoder *armExtensionEncoder = new Encoder(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
+  // XboxController *armController = new XboxController(Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
   Arm *m_arm = new Arm
     (
       this->m_controller,  //armController
       this->m_drivetrain,
       this->grabberPiston,
       this->armJoint,
-      this->armExtension
+      this->armExtension,
+      this->armJointEncoder,
+      this->armExtensionEncoder
     );
   /* --=[###############]=-- */
 };
