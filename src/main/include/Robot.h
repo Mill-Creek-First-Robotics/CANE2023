@@ -55,14 +55,16 @@ class Robot : public TimedRobot {
   
   //Drivetrain Controller.
   XboxController *m_controller = new XboxController(Controller::DRIVE_XBOX_CONTROLLER);
-  /** Button Bindings Overview:
-  *  Left Joystick y-axis = move robot forward/back
-  *  Right Joystick x-axis = rotate robot left/right
-  *  'A' button = toggle the grabber pneumatics extended/retracted
-  *  //
-  *  //
-  *  //
-  */
+  /* Here are the current Button Bindings:
+   * A = Toggle grabber (pneumatic piston)
+   * X = Move arm upwards at the joint
+   * Y = Move arm downwards at the joint
+   * B = Move the vector motor (currently not in use, was just for testing, remains because of possible future testing)
+   * LB = Extend the arm, needs to be held
+   * RB = Retract the arm, also needs to be held
+   * Left Joystick Y-Axis = Move robot forwards/backwards
+   * Right Joystick X-Axis = Rotate robot left/right
+   */
   // Timer *m_timer; //I have no clue if this can be a pointer or not.
   // units::second_t *startTime;
   Drive *m_drive = new Drive

@@ -40,6 +40,7 @@ class Arm {
   Encoder *armJointEncoder;
   Encoder *armExtensionEncoder;
 
+  //Testing Victor Motor
   VictorSPX *vector = new VictorSPX(MotorControllerSRX::TEST_VICTOR_COPY);
 
   bool armMovingForward;

@@ -3,8 +3,8 @@
 Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w,
          WPI_TalonSRX *e, Encoder *r, Encoder *o)
 :                   // Initializer list
-armController(x), // armController = x;
-armDrive(d),      // armDrive = d; etc...
+armController(x),   // armController = x;
+armDrive(d),        // armDrive = d; etc...
 armGrabberPiston(s),
 armJoint(w),
 armExtension(e),
@@ -101,7 +101,7 @@ void Arm::CheckControllerState() {
   ArmRetract();
  /* --=[ END ]=-- */
 
- /* --=[ Vector Motor ]=-- */
+ /* --=[ VECTOR MOTOR ]=-- */
   if (armController->GetBButtonPressed()) {
     armVectorIsMoving = true;
   }
@@ -110,7 +110,6 @@ void Arm::CheckControllerState() {
   }
   MoveVectorMotor(1.0);
  /* --=[ END ]=-- */
-
 
   HandleGrabber();
 }

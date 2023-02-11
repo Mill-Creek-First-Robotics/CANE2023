@@ -76,7 +76,7 @@ Here are the current Button Bindings:
 * Y = Move arm downwards at the joint
 * B = Move the vector motor (currently not in use, was just for testing, remains because of possible future testing)
 * LB = Extend the arm, needs to be held
-* RB = Retract the arm, also needs to be help
+* RB = Retract the arm, also needs to be held
 * Left Joystick Y-Axis = Move robot forwards/backwards
 * Right Joystick X-Axis = Rotate robot left/right
 
