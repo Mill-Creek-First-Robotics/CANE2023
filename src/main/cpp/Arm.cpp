@@ -83,7 +83,7 @@ void Arm::CheckControllerState() {
   }
   else if (!armMovingForward) {
     armJoint->Set(0.0);
-    //armJointHelper->Set(0.0);
+    //p[armJointHelper->Set(0.0);
   }
   // ===== END IF "LOOPS" =====
  /* --=[ END ]=-- */
