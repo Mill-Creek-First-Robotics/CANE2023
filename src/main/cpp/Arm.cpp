@@ -1,6 +1,9 @@
 #include "Arm.h"
 #include <iostream>
 #include <fmt/printf.h>
+//switch enxtend and retract
+//change armMoving forward to arm moving up.
+//switch button bindings.
 
 Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w,
          WPI_TalonSRX *e, WPI_TalonSRX *q, Encoder *r, Encoder *o)
