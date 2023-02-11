@@ -69,17 +69,21 @@ void Arm::CheckControllerState() {
   // ===== IF "LOOPS" =====
   //make sure that if both buttons are pressed, arm doesn't try to move both ways
   if (armMovingForward && !armMovingBackward) {
-    armJoint->Set(1.0);
+    armJoint->Set(0.5);
+    armJointHelper->Set(-0.5);
   }
   else if (!armMovingBackward) {//arm isn't currently trying to move back
     armJoint->Set(0.0);
+    armJointHelper->Set(0.0);
   }
 
   if (armMovingBackward && !armMovingForward) {
-    armJoint->Set(-1.0);
+    armJoint->Set(-0.5);
+    armJointHelper->Set(0.5);
   }
   else if (!armMovingForward) {
     armJoint->Set(0.0);
+    armJointHelper->Set(0.0);
   }
   // ===== END IF "LOOPS" =====
  /* --=[ END ]=-- */
