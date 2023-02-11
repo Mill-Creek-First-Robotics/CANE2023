@@ -1,4 +1,6 @@
 #include "Arm.h"
+#include <iostream>
+#include <fmt/printf.h>
 
 Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w,
          WPI_TalonSRX *e, WPI_TalonSRX *q, Encoder *r, Encoder *o)
@@ -78,15 +80,24 @@ void Arm::CheckControllerState() {
   }
 
   if (armMovingBackward && !armMovingForward) {
-    armJoint->Set(-0.5);
+    if (armJointEncoder->GetDistance() > -800) {
+      armJoint->Set(-0.5);
+    }
+    else if (armJointEncoder->GetDistance() < -600){
+      armJoint->Set(0.5);
+    }
     //armJointHelper->Set(0.5);
   }
   else if (!armMovingForward) {
     armJoint->Set(0.0);
-    //p[armJointHelper->Set(0.0);
+    //armJointHelper->Set(0.0);
   }
+  std::cout << armJointEncoder->GetDistance() << std::endl;
   // ===== END IF "LOOPS" =====
  /* --=[ END ]=-- */
+  if (armController->GetBButtonPressed()) {
+    armJointEncoder->Reset();
+  }
 
  /* --=[ ARM EXTENSION ]=-- */
   if (armController->GetRightBumperPressed()) {
