@@ -18,6 +18,7 @@ class Arm {
       Solenoid *s,
       WPI_TalonSRX *w,
       WPI_TalonSRX *e,
+      WPI_TalonSRX *q,
       Encoder *r,
       Encoder *o
     );
@@ -37,6 +38,7 @@ class Arm {
   Solenoid *armGrabberPiston;
   WPI_TalonSRX *armJoint;
   WPI_TalonSRX *armExtension;
+  WPI_TalonSRX *armJointHelper;
   Encoder *armJointEncoder;
   Encoder *armExtensionEncoder;
 

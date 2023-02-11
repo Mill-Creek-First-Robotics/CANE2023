@@ -78,6 +78,7 @@ class Robot : public TimedRobot {
   //int deviceNumber
   WPI_TalonSRX *armJoint = new WPI_TalonSRX(MotorControllerSRX::ARM_JOINT_MOTOR_CONTROLLER);
   WPI_TalonSRX *armExtension = new WPI_TalonSRX(MotorControllerSRX::ARM_EXTENSION_MOTOR_CONTROLLER);
+  WPI_TalonSRX *armJointHelper = new WPI_TalonSRX(MotorControllerSRX::ARM_JOINT_HELPER_MOTOR_CONTROLLER);
   //Define the Compressor and Pneumatic Piston that controls grabber
   //{int compressor, module type}
   Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
@@ -94,6 +95,7 @@ class Robot : public TimedRobot {
       this->grabberPiston,
       this->armJoint,
       this->armExtension,
+      this->armJointHelper,
       this->armJointEncoder,
       this->armExtensionEncoder
     );
