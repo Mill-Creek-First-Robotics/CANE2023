@@ -37,24 +37,27 @@ class Robot : public TimedRobot {
   string m_autoSelected;
   /* --=[###################]=-- */
 
+  /* --=[ MISC SENSORS ]=-- */
+
+
   /* --=[ DRIVETRAIN ]=-- */
   // type name = new type(args); means dynamic allocation. Object is deleted when we explicitly say so, useful to avoid scope errors.
   // new keyword also *always* returns a pointer.
   //Left Motors
-  WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(MotorControllerSRX::FRONT_LEFT_MOTOR);
-  WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(MotorControllerSRX::BACK_LEFT_MOTOR);
+  WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(Constants::MotorControllers::FRONT_LEFT);
+  WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(Constants::MotorControllers::BACK_LEFT);
   MotorControllerGroup *m_left = new MotorControllerGroup(*m_frontLeft, *m_backLeft);
 
   //Right Motors
-  WPI_TalonSRX *m_frontRight = new WPI_TalonSRX(MotorControllerSRX::FRONT_RIGHT_MOTOR);
-  WPI_TalonSRX *m_backRight = new WPI_TalonSRX(MotorControllerSRX::BACK_RIGHT_MOTOR);
+  WPI_TalonSRX *m_frontRight = new WPI_TalonSRX(Constants::MotorControllers::FRONT_RIGHT);
+  WPI_TalonSRX *m_backRight = new WPI_TalonSRX(Constants::MotorControllers::BACK_RIGHT);
   MotorControllerGroup *m_right = new MotorControllerGroup(*m_frontRight, *m_backRight);
 
   //Create a differential drive using the two previously defined motor groups.
   DifferentialDrive *m_drivetrain = new DifferentialDrive(*m_left, *m_right);
   
   //Drivetrain Controller.
-  XboxController *m_controller = new XboxController(Controller::DRIVE_XBOX_CONTROLLER);
+  XboxController *m_controller = new XboxController(Constants::Controller::DRIVE_XBOX_CONTROLLER);
   /* Here are the current Button Bindings:
    * A = Toggle grabber (pneumatic piston)
    * X = Move arm upwards at the joint
@@ -76,17 +79,16 @@ class Robot : public TimedRobot {
 
   /* --=[ ARM & GRABBER ]=-- */
   //int deviceNumber
-  WPI_TalonSRX *armJoint = new WPI_TalonSRX(MotorControllerSRX::ARM_JOINT_MOTOR_CONTROLLER);
-  WPI_TalonSRX *armExtension = new WPI_TalonSRX(MotorControllerSRX::ARM_EXTENSION_MOTOR_CONTROLLER);
-  WPI_TalonSRX *armJointHelper = new WPI_TalonSRX(MotorControllerSRX::ARM_JOINT_HELPER_MOTOR_CONTROLLER);
+  WPI_TalonSRX *armJoint = new WPI_TalonSRX(Constants::MotorControllers::ARM_JOINT);
+  WPI_TalonSRX *armExtension = new WPI_TalonSRX(Constants::MotorControllers::ARM_EXTENSION);
   //Define the Compressor and Pneumatic Piston that controls grabber
   //{int compressor, module type}
-  Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
+  Compressor *pcmCompressor = new Compressor(Constants::COMPRESSOR, PneumaticsModuleType::CTREPCM);
   //{Module type, int channel}
-  Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
+  Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, Constants::Solenoids::ARM_SOLENOID);
   //(int achannel, int bchannel, bool reverseDirection, EncodingType type)
-  Encoder *armJointEncoder = new Encoder(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL, true, Encoder::EncodingType::k4X);
-  Encoder *armExtensionEncoder = new Encoder(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
+  Encoder *armJointEncoder = new Encoder(Constants::Encoders::JOINT_ENCODER_ACHANNEL, Constants::Encoders::JOINT_ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
+  Encoder *armExtensionEncoder = new Encoder(Constants::Encoders::EXTEND_ENCODER_ACHANNEL, Constants::Encoders::EXTEND_ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
   // XboxController *armController = new XboxController(Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
   Arm *m_arm = new Arm
     (
@@ -95,7 +97,6 @@ class Robot : public TimedRobot {
       this->grabberPiston,
       this->armJoint,
       this->armExtension,
-      this->armJointHelper,
       this->armJointEncoder,
       this->armExtensionEncoder
     );

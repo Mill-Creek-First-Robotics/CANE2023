@@ -54,7 +54,7 @@ void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
   m_drive->TuxDrive();
-  m_arm->CheckControllerState();
+  m_arm->ArmUpdate();
 }
 
 void Robot::DisabledInit() {}

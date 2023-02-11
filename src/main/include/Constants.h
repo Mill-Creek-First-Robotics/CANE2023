@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Constants {
+
 int const COMPRESSOR = 0;
 
 //Enums so we don't have to restructure this later
@@ -8,16 +10,13 @@ enum Controller {
     ARM_XBOX_CONTROLLER
 };
 
-enum MotorControllerSRX {
-    TEST_VICTOR_COPY = 0,
-    TEST_WPI_COPY = 7,
-    ARM_JOINT_HELPER_MOTOR_CONTROLLER,
-    ARM_EXTENSION_MOTOR_CONTROLLER = 7,
-    ARM_JOINT_MOTOR_CONTROLLER = 45,
-    BACK_RIGHT_MOTOR = 1,
-    FRONT_RIGHT_MOTOR,
-    BACK_LEFT_MOTOR = 13,
-    FRONT_LEFT_MOTOR,
+enum MotorControllers {
+    ARM_EXTENSION = 7,
+    ARM_JOINT = 45,
+    BACK_RIGHT = 1,
+    FRONT_RIGHT,
+    BACK_LEFT = 13,
+    FRONT_LEFT,
 };
 
 enum Encoders {
@@ -27,6 +26,7 @@ enum Encoders {
     EXTEND_ENCODER_BCHANNEL
 };
 
-enum ChannelSolenoid {
+enum Solenoids {
     ARM_SOLENOID = 0
 };
+} //namespace Constants
