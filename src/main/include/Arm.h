@@ -55,12 +55,10 @@ class Arm {
     );
   void SetJointLimits(Limits::Positions pos);
   void ArmUpdate();
-  void CheckControllerState();
-  void ResetPosition();
   void ArmExtend();
   void ArmRetract();
-  void HandleGrabber();
   void MoveArmJoint();
+  void HandleGrabber();
   void HandleJointInput();
   void HandleExtensionInput();
   //debug functions are for manually moving respective parts
@@ -78,33 +76,35 @@ class Arm {
   Encoder *armJointEncoder;
   Encoder *armExtensionEncoder;
 
-  double const EXTEND_SPEED = 0.2;
-  double const RETRACT_SPEED = -0.2;
-  double const JOINT_UPWARDS_SPEED = 0.5;
-  double const JOINT_DOWNWARDS_SPEED = 0.2;
-
-  int armJointEncoderDistance;
-  int armExtensionEncoderDistance;
+  int const MODE = Mode::NORMAL;
 
   int UPPER_JOINT_LIMIT;
   int LOWER_JOINT_LIMIT;
   //Limits::Positions CURRENT_JOINT_LIMITS;
 
+  double const JOINT_UPWARDS_SPEED = 0.3;
+  double const JOINT_DOWNWARDS_SPEED = -0.3;
+  double const EXTEND_SPEED = 0.2;
+  double const RETRACT_SPEED = -0.2;
+
+  int const UPPER_EXTENSION_RANGE_LOW  = 500;
+  int const UPPER_EXTENSION_RANGE_HIGH = 600;
+  int const LOWER_EXTENSION_RANGE_LOW  = 0;
+  int const LOWER_EXTENSION_RANGE_HIGH = 100;
+
+  int armJointEncoderDistance;
+  int armExtensionEncoderDistance;
+
   int BPresses;
-  units::second_t BBUTTON_CHECK_INTERVAL; 
+  units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
   Timer BButtonTimer; //Local only, no need for pointers. Timer is off by default.
 
-  int UPPER_EXTENSION_RANGE_LOW;
-  int UPPER_EXTENSION_RANGE_HIGH;
-  int LOWER_EXTENSION_RANGE_LOW;
-  int LOWER_EXTENSION_RANGE_HIGH;
+  bool armExtend;
+  bool armRetract;
 
+  //following 4 are for debug purposes
   bool armMovingUp;
   bool armMovingDown;
   bool armIsExtending;
   bool armIsRetracting;
-  bool armExtend;
-  bool armRetract;
-
-  int MODE;
 };

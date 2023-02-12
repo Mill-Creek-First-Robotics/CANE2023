@@ -4,9 +4,9 @@
 
 Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w,
          WPI_TalonSRX *e, Encoder *r, Encoder *o)
-:                   // Initializer list
-armController(x),   // armController = x;
-armDrive(d),        // armDrive = d; etc...
+:                   //Initializer list
+armController(x),   //armController = x;
+armDrive(d),        //armDrive = d; etc...
 armGrabberPiston(s),
 armJoint(w),
 armExtension(e),
@@ -15,24 +15,19 @@ armExtensionEncoder(o),
 //END OF PARAMS USAGE
 //MANUALLY ENTER FOLLOWING VALUES
 BPresses(0),
-BBUTTON_CHECK_INTERVAL(1_s),
-UPPER_EXTENSION_RANGE_LOW(500),
-UPPER_EXTENSION_RANGE_HIGH(600),
-LOWER_EXTENSION_RANGE_LOW(0),
-LOWER_EXTENSION_RANGE_HIGH(100),
+armExtend(false),
+armRetract(false),
 armMovingUp(false),
 armMovingDown(false),
 armIsExtending(false),
-armIsRetracting(false),
-armExtend(false),
-MODE(Mode::NORMAL)
+armIsRetracting(false)
 { //Contructor Body
-  //Both encoder assume initial position is 0.
-  //Therefore, arm must be all the way down and fully retracted.
+  //Both encoders assume initial position is 0.
+  //Therefore, arm must be all the way down and fully retracted at start.
   armJointEncoder->Reset();
   armExtensionEncoder->Reset();
 
-  SetJointLimits(Limits::Positions::POS1);
+  SetJointLimits(Limits::Positions::POS1); //Default joint limits
 }
 
 void Arm::SetJointLimits(Limits::Positions pos) {
@@ -61,9 +56,9 @@ void Arm::ArmUpdate() {
  /* --=[ FUNCTION CALLS ]=-- */
   if ( MODE == Mode::NORMAL ) {
     HandleJointInput();
+    HandleGrabber();
     //Will not work because currently the arm extension does not have an encoder...
     HandleExtensionInput();
-    HandleGrabber();
   }
   else if ( MODE == Mode::DEBUG ) {
     DebugArmJoint();
@@ -83,13 +78,13 @@ void Arm::HandleExtensionInput() {
     armRetract = true;
     ArmRetract();
   }
+  else if ( !armExtend && !armRetract ) armExtension->Set(0.0);
 }
 
 void Arm::ArmExtend() {
   if ( armExtensionEncoderDistance > UPPER_EXTENSION_RANGE_LOW 
     && armExtensionEncoderDistance < UPPER_EXTENSION_RANGE_HIGH )
   {
-    armExtension->Set(0.0);
     //Function is no longer called, escape repeated function call
     armExtend = false;
   }
@@ -105,8 +100,6 @@ void Arm::ArmRetract() {
   if ( armExtensionEncoderDistance > LOWER_EXTENSION_RANGE_LOW
     && armExtensionEncoderDistance < LOWER_EXTENSION_RANGE_HIGH )
   {
-    armExtension->Set(0.0);
-    //Function is no longer called, escape repeated function call
     armExtend = false;
   }
   else if ( armExtensionEncoderDistance < LOWER_EXTENSION_RANGE_LOW ) {
@@ -133,7 +126,7 @@ void Arm::HandleJointInput() {
   }
   //runs once a second has passed since the timer was started
   if ( BButtonTimer.HasElapsed(BBUTTON_CHECK_INTERVAL) ) {
-    switch(BPresses) {
+    switch(BPresses) { //Match # of button presses, setting joint limits respectively.
     case 1:
       SetJointLimits(Limits::Positions::POS1);
       break;
@@ -159,10 +152,10 @@ void Arm::MoveArmJoint() {
     armJoint->Set(0.0);
   }
   else if ( armJointEncoderDistance > UPPER_JOINT_LIMIT ) {
-    armJoint->Set(JOINT_DOWNWARDS_SPEED); //move down
+    armJoint->Set(JOINT_DOWNWARDS_SPEED);
   }
   else if ( armJointEncoderDistance < LOWER_JOINT_LIMIT ) {
-    armJoint->Set(JOINT_UPWARDS_SPEED);  //move up
+    armJoint->Set(JOINT_UPWARDS_SPEED); 
   }
 }
 
@@ -174,21 +167,12 @@ void Arm::DebugArmJoint() {
             << std::endl << std::endl;
  /* --=[ END ]=-- */
  /* --=[ ARM JOINT ]=-- */
-  // "->" dereferences object to access member | same as (*object).member
   // === LOOP CONDITIONS ===
-  if (armController->GetRightBumperPressed()) {
-    armMovingUp = true;
-  }
-  if (armController->GetRightBumperReleased()) {
-    armMovingUp = false;
-  }
+  if (armController->GetRightBumperPressed()) armMovingUp = true;
+  if (armController->GetRightBumperReleased()) armMovingUp = false;
 
-  if (armController->GetLeftBumperPressed()) {
-    armMovingDown = true;
-  }
-  if (armController->GetLeftBumperReleased()) {
-    armMovingDown = false;
-  }
+  if (armController->GetLeftBumperPressed()) armMovingDown = true;
+  if (armController->GetLeftBumperReleased()) armMovingDown = false;
   //=== END LOOP CONDITIONS ===
   //===== IF "LOOPS" =====
   //make sure that if both buttons are pressed, arm doesn't try to move both ways
@@ -218,19 +202,12 @@ void Arm::DebugArmJoint() {
 }
 
 void Arm::DebugArmExtension() {
-  if (armController->GetXButtonPressed()) {
-    armIsExtending = true;
-  }
-  if (armController->GetXButtonReleased()) {
-    armIsExtending = false;
-  } 
+  if (armController->GetXButtonPressed()) armIsExtending = true;
+  if (armController->GetXButtonReleased()) armIsExtending = false;
 
-  if (armController->GetYButtonPressed()) {
-    armIsRetracting = true;
-  }
-  if (armController->GetYButtonReleased()) {
-    armIsRetracting = false;
-  }
+  if (armController->GetYButtonPressed()) armIsRetracting = true;
+  if (armController->GetYButtonReleased()) armIsRetracting = false;
+
   DebugArmExtend();
   DebugArmRetract();
 }
