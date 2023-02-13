@@ -122,7 +122,9 @@ void Arm::HandleJointInput() {
   }
   if ( armController->GetBButtonReleased() ) {
     //Start timer for multiple button presses when the first button is released.
-    BButtonTimer.Start(); //does nothing when called again & the timer is already running.
+    //needs if statement so that a button held from previous interval
+    //doesn't start next interval w/out increasing b
+    if (BPresses > 0) BButtonTimer.Start(); //does nothing when called again & the timer is already running.
   }
   //runs once a second has passed since the timer was started
   if ( BButtonTimer.HasElapsed(BBUTTON_CHECK_INTERVAL) ) {

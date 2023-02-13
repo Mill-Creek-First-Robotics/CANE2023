@@ -89,7 +89,7 @@ class Robot : public TimedRobot {
   //(int achannel, int bchannel, bool reverseDirection, EncodingType type)
   Encoder *armJointEncoder = new Encoder(Constants::Encoders::JOINT_ENCODER_ACHANNEL, Constants::Encoders::JOINT_ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
   Encoder *armExtensionEncoder = new Encoder(Constants::Encoders::EXTEND_ENCODER_ACHANNEL, Constants::Encoders::EXTEND_ENCODER_BCHANNEL, false, Encoder::EncodingType::k4X);
-  // XboxController *armController = new XboxController(Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
+  // XboxController *armController = new XboxController(Constants::Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
   Arm *m_arm = new Arm
     (
       this->m_controller,  //armController
