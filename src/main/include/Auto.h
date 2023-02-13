@@ -16,5 +16,6 @@ class Auto {
     
     private:
         DifferentialDrive *autoDrive;
-        units::second_t *startTime;
+        units::second_t startTime;
+        Timer timer;
 };

@@ -4,7 +4,7 @@ Auto::Auto(DifferentialDrive *d)
 : //Initializer list
 autoDrive(d)            //armDrive = d; etc...
 {
-  this->startTime = frc2::Timer::GetFPGATimestamp();
+  TimerReset();
 };
 
 void Auto::AutoCenter() {
@@ -13,14 +13,14 @@ void Auto::AutoCenter() {
      * 
      * @param[in] d Pointer to Differential Drive
     */
-   if (frc2::Timer::GetFPGATimestamp() - this->startTime < (units::second_t)2) {
-         this->autoDrive->ArcadeDrive(-1.0, 0.0); //Move backwards
-     }
-     else {
-         this->autoDrive->ArcadeDrive(0.0, 0.0);
-     }
+  if (timer.GetFPGATimestamp() - startTime < (units::second_t)2) {
+    this->autoDrive->ArcadeDrive(-1.0, 0.0); //Move backwards for 2 seconds
+  }
+  else {
+    this->autoDrive->ArcadeDrive(0.0, 0.0);
+  }
 };
 
 void Auto::TimerReset() {
-    // this->startTime = frc2::Timer::GetFPGATimestamp();
+  startTime = timer.GetFPGATimestamp();
 }
