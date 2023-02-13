@@ -26,7 +26,7 @@ armIsRetracting(false)
   //Therefore, arm must be all the way down and fully retracted at start.
   armJointEncoder->Reset();
   armExtensionEncoder->Reset();
-
+  Helpme.Start();
   SetJointLimits(Limits::Positions::POS1); //Default joint limits
 }
 
@@ -50,15 +50,16 @@ void Arm::SetJointLimits(Limits::Positions pos) {
 void Arm::ArmUpdate() {
  /* --=[ UPDATE VARIABLES]=-- */
   armJointEncoderDistance = armJointEncoder->GetDistance();
+  //std::cout << armJointEncoderDistance << std::endl;
   armExtensionEncoderDistance = armExtensionEncoder->GetDistance();
  /* --=[ END ]=-- */
- 
+ victor->Set(ControlMode::PercentOutput,1.0);
  /* --=[ FUNCTION CALLS ]=-- */
   if ( MODE == Mode::NORMAL ) {
     HandleJointInput();
     HandleGrabber();
     //Will not work because currently the arm extension does not have an encoder...
-    HandleExtensionInput();
+    //HandleExtensionInput();
   }
   else if ( MODE == Mode::DEBUG ) {
     DebugArmJoint();
@@ -164,9 +165,13 @@ void Arm::MoveArmJoint() {
 /* --=========[ DEBUG FUNCTIONS ]========-- */
 void Arm::DebugArmJoint() {
  /* --=[ DEBUGGING WATCHERS ]=-- */
+  if (Helpme.HasElapsed(1_s)) {
   std::cout << "JOINT ENCODER DISTANCE: " << armJointEncoderDistance << std::endl;
   std::cout << "EXTENSION ENCODER DISTANCE: " << armExtensionEncoderDistance
             << std::endl << std::endl;
+    Helpme.Reset();
+    Helpme.Start();
+  }
  /* --=[ END ]=-- */
  /* --=[ ARM JOINT ]=-- */
   // === LOOP CONDITIONS ===
@@ -179,7 +184,7 @@ void Arm::DebugArmJoint() {
   //===== IF "LOOPS" =====
   //make sure that if both buttons are pressed, arm doesn't try to move both ways
   if (armMovingUp && !armMovingDown) {
-    armJoint->Set(0.5);
+    armJoint->Set(-0.5);
   }
   else if (!armMovingDown) { //arm isn't currently trying to move back
     armJoint->Set(0.0);
@@ -194,7 +199,7 @@ void Arm::DebugArmJoint() {
     // else if (armJointEncoder->GetDistance() < 600){
     //   armJoint->Set(0.5); //move up
     // }
-    armJoint->Set(-0.2);
+    armJoint->Set(0.5);
   }
   else if (!armMovingUp) {
     armJoint->Set(0.0);

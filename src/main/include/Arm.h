@@ -24,7 +24,7 @@ enum Positions {
 
 enum POS1 {
   ONE_UPPER = 300,
-  ONE_LOWER = 100
+  ONE_LOWER = 0
 };
 
 enum POS2 {
@@ -76,14 +76,16 @@ class Arm {
   Encoder *armJointEncoder;
   Encoder *armExtensionEncoder;
 
-  int const MODE = Mode::NORMAL;
+  VictorSPX *victor = new VictorSPX(0);
+
+  int const MODE = Mode::DEBUG;
 
   int UPPER_JOINT_LIMIT;
   int LOWER_JOINT_LIMIT;
   //Limits::Positions CURRENT_JOINT_LIMITS;
 
-  double const JOINT_UPWARDS_SPEED = 0.3;
-  double const JOINT_DOWNWARDS_SPEED = -0.3;
+  double const JOINT_UPWARDS_SPEED = -0.3;
+  double const JOINT_DOWNWARDS_SPEED = 0.3;
   double const EXTEND_SPEED = 0.2;
   double const RETRACT_SPEED = -0.2;
 
@@ -98,6 +100,8 @@ class Arm {
   int BPresses;
   units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
   Timer BButtonTimer; //Local only, no need for pointers. Timer is off by default.
+
+  Timer Helpme;
 
   bool armExtend;
   bool armRetract;

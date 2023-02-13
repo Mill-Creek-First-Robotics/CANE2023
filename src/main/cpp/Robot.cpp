@@ -7,7 +7,7 @@ void Robot::RobotInit() {
   
   m_left->SetInverted(true);
   pcmCompressor->Disable(); 
-  pcmCompressor->EnableDigital();
+  //pcmCompressor->EnableDigital();
 }
 
 /**
