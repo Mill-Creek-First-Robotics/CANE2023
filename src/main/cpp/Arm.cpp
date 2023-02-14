@@ -26,7 +26,7 @@ armIsRetracting(false)
   //Therefore, arm must be all the way down and fully retracted at start.
   armJointEncoder->Reset();
   armExtensionEncoder->Reset();
-  Helpme.Start();
+  
   SetJointLimits(Limits::Positions::POS1); //Default joint limits
 }
 
@@ -163,16 +163,14 @@ void Arm::MoveArmJoint() {
 }
 
 /* --=========[ DEBUG FUNCTIONS ]========-- */
+/**
+ * To watch variables do:
+ * Ctrl + P
+ * type "view watch"
+ * hit enter
+ * under watch dropdown, hit the + and type in variable name
+*/
 void Arm::DebugArmJoint() {
- /* --=[ DEBUGGING WATCHERS ]=-- */
-  if (Helpme.HasElapsed(1_s)) {
-  std::cout << "JOINT ENCODER DISTANCE: " << armJointEncoderDistance << std::endl;
-  std::cout << "EXTENSION ENCODER DISTANCE: " << armExtensionEncoderDistance
-            << std::endl << std::endl;
-    Helpme.Reset();
-    Helpme.Start();
-  }
- /* --=[ END ]=-- */
  /* --=[ ARM JOINT ]=-- */
   // === LOOP CONDITIONS ===
   if (armController->GetRightBumperPressed()) armMovingUp = true;

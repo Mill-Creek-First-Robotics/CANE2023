@@ -101,8 +101,6 @@ class Arm {
   units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
   Timer BButtonTimer; //Local only, no need for pointers. Timer is off by default.
 
-  Timer Helpme;
-
   bool armExtend;
   bool armRetract;
 
