@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Constants.h"
-#include "ctre/Phoenix.h"
 
 #include <frc/Timer.h>
 #include <units/time.h>
 #include <frc/Encoder.h>
+#include "ctre/Phoenix.h"
 #include <frc/Solenoid.h>
 #include <frc/Compressor.h>
 #include <frc/XboxController.h>
@@ -13,30 +13,8 @@
 #include <frc/drive/DifferentialDrive.h>
 
 using namespace frc;
-
-//Limits for the arm positions
-struct Limits {
-enum Positions {
-  POS1,
-  POS2,
-  POS3
-};
-
-enum POS1 {
-  ONE_UPPER = 300,
-  ONE_LOWER = 0
-};
-
-enum POS2 {
-  TWO_UPPER = 600,
-  TWO_LOWER = 400
-};
-
-enum POS3 {
-  THREE_UPPER = 900,
-  THREE_LOWER = 700
-};
-}; //struct Limits
+using namespace Constants;
+using namespace Constants::Limits;
 
 enum Mode {
   DEBUG,
@@ -45,20 +23,32 @@ enum Mode {
 
 class Arm {
  public:
-  Arm(XboxController *x,
-      DifferentialDrive *d,
-      Solenoid *s,
-      WPI_TalonSRX *w,
-      WPI_TalonSRX *e,
-      Encoder *r,
-      Encoder *o
-    );
-  void SetJointLimits(Limits::Positions pos);
+  Arm (
+    XboxController *x,
+    DifferentialDrive *d,
+    Solenoid *s,
+    WPI_TalonSRX *w,
+    WPI_TalonSRX *e,
+    WPI_TalonSRX *a,
+    Encoder *r,
+    Encoder *o,
+    Encoder *q
+  );
+  void SetJointAndGrabberLimits(JointPositions pos);
+  void SetExtensionLimits(ExtensionPositions pos);
+  void MoveWithinLimits (
+    WPI_TalonSRX *motor,
+    int distance,
+    double speedf,
+    double speedb,
+    int limitUpper,
+    int limitLower 
+  );
   void ArmUpdate();
-  void ArmExtend();
-  void ArmRetract();
+  void MoveArmExtension();
   void MoveArmJoint();
-  void HandleGrabber();
+  void MoveGrabber();
+  void HandleGrabberPneumatics();
   void HandleJointInput();
   void HandleExtensionInput();
   //debug functions are for manually moving respective parts
@@ -72,41 +62,37 @@ class Arm {
   DifferentialDrive *armDrive;
   Solenoid *armGrabberPiston;
   WPI_TalonSRX *armJoint;
+  WPI_TalonSRX *armGrabberJoint;
   WPI_TalonSRX *armExtension;
   Encoder *armJointEncoder;
   Encoder *armExtensionEncoder;
-
-  VictorSPX *victor = new VictorSPX(0);
+  Encoder *armGrabberEncoder;
 
   int const MODE = Mode::DEBUG;
 
   int UPPER_JOINT_LIMIT;
   int LOWER_JOINT_LIMIT;
-  //Limits::Positions CURRENT_JOINT_LIMITS;
-
-  double const JOINT_UPWARDS_SPEED = -0.3;
-  double const JOINT_DOWNWARDS_SPEED = 0.3;
-  double const EXTEND_SPEED = 0.2;
-  double const RETRACT_SPEED = -0.2;
-
-  int const UPPER_EXTENSION_RANGE_LOW  = 500;
-  int const UPPER_EXTENSION_RANGE_HIGH = 600;
-  int const LOWER_EXTENSION_RANGE_LOW  = 0;
-  int const LOWER_EXTENSION_RANGE_HIGH = 100;
+  int UPPER_GRABBER_LIMIT;
+  int LOWER_GRABBER_LIMIT;
+  int UPPER_EXTENSION_LIMIT;
+  int LOWER_EXTENSION_LIMIT;
 
   int armJointEncoderDistance;
   int armExtensionEncoderDistance;
+  int armGrabberEncoderDistance;
 
   int BPresses;
-  units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
   Timer BButtonTimer; //Local only, no need for pointers. Timer is off by default.
 
-  bool armExtend;
-  bool armRetract;
+  bool armExtensionToggle;
 
-  //following 4 are for debug purposes
+  //following 5 are for debug purposes
   bool armMovingUp;
   bool armMovingDown;
   bool armIsExtending;
   bool armIsRetracting;
+  Timer DebugTimer;
+ 
+  bool Brendan;
+  bool noseIsBleeding;
 };

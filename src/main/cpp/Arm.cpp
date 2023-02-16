@@ -3,7 +3,7 @@
 #include <iostream>
 
 Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w,
-         WPI_TalonSRX *e, Encoder *r, Encoder *o)
+         WPI_TalonSRX *e, WPI_TalonSRX *a, Encoder *r, Encoder *o, Encoder *q)
 :                   //Initializer list
 armController(x),   //armController = x;
 armDrive(d),        //armDrive = d; etc...
@@ -12,109 +12,110 @@ armJoint(w),
 armExtension(e),
 armJointEncoder(r),
 armExtensionEncoder(o),
-//END OF PARAMS USAGE
-//MANUALLY ENTER FOLLOWING VALUES
-BPresses(0),
-armExtend(false),
-armRetract(false),
-armMovingUp(false),
-armMovingDown(false),
-armIsExtending(false),
-armIsRetracting(false)
+armGrabberEncoder(q)
 { //Contructor Body
-  //Both encoders assume initial position is 0.
+  //All encoders assume initial position is 0.
   //Therefore, arm must be all the way down and fully retracted at start.
   armJointEncoder->Reset();
+  armGrabberEncoder->Reset();
   armExtensionEncoder->Reset();
   
-  SetJointLimits(Limits::Positions::POS1); //Default joint limits
+  SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
+  SetExtensionLimits(ExtensionPositions::EXT_L); //Default extension limits
+  if ( MODE == Mode::DEBUG ) DebugTimer.Start();
 }
 
-void Arm::SetJointLimits(Limits::Positions pos) {
+void Arm::SetJointAndGrabberLimits(JointPositions pos) {
   switch(pos) {
-  case Limits::Positions::POS1:
-    UPPER_JOINT_LIMIT = Limits::POS1::ONE_UPPER;
-    LOWER_JOINT_LIMIT = Limits::POS1::ONE_LOWER;
+  case JointPositions::POS1:
+    UPPER_JOINT_LIMIT = JointLimits::ONE_UPPER;
+    LOWER_JOINT_LIMIT = JointLimits::ONE_LOWER;
+    UPPER_GRABBER_LIMIT = GrabberLimits::G_ONE_UPPER;
+    LOWER_GRABBER_LIMIT = GrabberLimits::G_ONE_LOWER;
     break;
-  case Limits::Positions::POS2:
-    UPPER_JOINT_LIMIT = Limits::POS2::TWO_UPPER;
-    LOWER_JOINT_LIMIT = Limits::POS2::TWO_LOWER;
+  case JointPositions::POS2:
+    UPPER_JOINT_LIMIT = JointLimits::TWO_UPPER;
+    LOWER_JOINT_LIMIT = JointLimits::TWO_LOWER;
+    UPPER_GRABBER_LIMIT = GrabberLimits::G_TWO_UPPER;
+    LOWER_GRABBER_LIMIT = GrabberLimits::G_TWO_LOWER;
     break;
-  case Limits::Positions::POS3:
-    UPPER_JOINT_LIMIT = Limits::POS3::THREE_UPPER;
-    LOWER_JOINT_LIMIT = Limits::POS3::THREE_LOWER;
+  case JointPositions::POS3:
+    UPPER_JOINT_LIMIT = JointLimits::THREE_UPPER;
+    LOWER_JOINT_LIMIT = JointLimits::THREE_LOWER;
+    UPPER_GRABBER_LIMIT = GrabberLimits::G_THREE_UPPER;
+    LOWER_GRABBER_LIMIT = GrabberLimits::G_THREE_LOWER;
   }
-  //CURRENT_JOINT_LIMITS = pos;
+}
+void Arm::SetExtensionLimits(ExtensionPositions pos) {
+  switch(pos) {
+  case ExtensionPositions::EXT_U:
+    UPPER_EXTENSION_LIMIT = ExtensionLimits::EXT_U_UPPER;
+    LOWER_EXTENSION_LIMIT = ExtensionLimits::EXT_U_LOWER;
+    break;
+  case ExtensionPositions::EXT_L:
+    UPPER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_UPPER;
+    LOWER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_LOWER;
+    break;
+  }
 }
 
 void Arm::ArmUpdate() {
  /* --=[ UPDATE VARIABLES]=-- */
   armJointEncoderDistance = armJointEncoder->GetDistance();
-  //std::cout << armJointEncoderDistance << std::endl;
+  armGrabberEncoderDistance = armGrabberEncoder->GetDistance();
   armExtensionEncoderDistance = armExtensionEncoder->GetDistance();
  /* --=[ END ]=-- */
- victor->Set(ControlMode::PercentOutput,1.0);
+
  /* --=[ FUNCTION CALLS ]=-- */
   if ( MODE == Mode::NORMAL ) {
     HandleJointInput();
-    HandleGrabber();
+    HandleGrabberPneumatics();
+    MoveGrabber();
     //Will not work because currently the arm extension does not have an encoder...
     //HandleExtensionInput();
   }
   else if ( MODE == Mode::DEBUG ) {
-    DebugArmJoint();
     DebugArmExtension();
+    DebugArmJoint();
+    HandleGrabberPneumatics();
   }
  /* --=[ END ]=-- */
 }
 
 void Arm::HandleExtensionInput() {
-  // || armExtend is another way to loop this without using "while"
-  // function is called repeatedly until it internally sets armExtend to false
-  if ( armController->GetRightBumperPressed() || armExtend ) {
-    armExtend = true;
-    ArmExtend();
+  if ( armController->GetXButtonPressed() ) {
+    armExtensionToggle = !armExtensionToggle;
+    armExtensionToggle ? SetExtensionLimits(ExtensionPositions::EXT_U)  //T
+    : SetExtensionLimits(ExtensionPositions::EXT_L);                    //F
   }
-  else if ( armController->GetLeftBumperPressed() || armRetract ) {
-    armRetract = true;
-    ArmRetract();
-  }
-  else if ( !armExtend && !armRetract ) armExtension->Set(0.0);
+  MoveArmExtension();
+}
+void Arm::MoveArmExtension() {
+  MoveWithinLimits (
+    armExtension,
+    armExtensionEncoderDistance,
+    Speeds::EXTEND_SPEED,
+    Speeds::RETRACT_SPEED,
+    UPPER_EXTENSION_LIMIT,
+    LOWER_EXTENSION_LIMIT
+  );
 }
 
-void Arm::ArmExtend() {
-  if ( armExtensionEncoderDistance > UPPER_EXTENSION_RANGE_LOW 
-    && armExtensionEncoderDistance < UPPER_EXTENSION_RANGE_HIGH )
-  {
-    //Function is no longer called, escape repeated function call
-    armExtend = false;
-  }
-  else if ( armExtensionEncoderDistance < UPPER_EXTENSION_RANGE_LOW ) {
-    armExtension->Set(EXTEND_SPEED);
-  }
-  else if ( armExtensionEncoderDistance > UPPER_EXTENSION_RANGE_HIGH ) {
-    armExtension->Set(RETRACT_SPEED);
-  }
-}
-
-void Arm::ArmRetract() {
-  if ( armExtensionEncoderDistance > LOWER_EXTENSION_RANGE_LOW
-    && armExtensionEncoderDistance < LOWER_EXTENSION_RANGE_HIGH )
-  {
-    armExtend = false;
-  }
-  else if ( armExtensionEncoderDistance < LOWER_EXTENSION_RANGE_LOW ) {
-    armExtension->Set(EXTEND_SPEED);
-  }
-  else if ( armExtensionEncoderDistance > LOWER_EXTENSION_RANGE_HIGH ) {
-    armExtension->Set(RETRACT_SPEED);
-  }
-}
-
-void Arm::HandleGrabber() {
+void Arm::HandleGrabberPneumatics() {
   if ( armController->GetAButtonPressed() ) {
     armGrabberPiston->Toggle();
   }
+}
+
+void Arm::MoveGrabber() {
+  MoveWithinLimits (
+    armGrabberJoint,
+    armGrabberEncoderDistance,
+    Speeds::GRABBER_UPWARDS_SPEED,
+    Speeds::GRABBER_DOWNWARDS_SPEED,
+    UPPER_GRABBER_LIMIT,
+    LOWER_GRABBER_LIMIT 
+  );
 }
 
 void Arm::HandleJointInput() {
@@ -128,16 +129,16 @@ void Arm::HandleJointInput() {
     if (BPresses > 0) BButtonTimer.Start(); //does nothing when called again & the timer is already running.
   }
   //runs once a second has passed since the timer was started
-  if ( BButtonTimer.HasElapsed(BBUTTON_CHECK_INTERVAL) ) {
+  if ( BButtonTimer.HasElapsed(Speeds::BBUTTON_CHECK_INTERVAL) ) {
     switch(BPresses) { //Match # of button presses, setting joint limits respectively.
     case 1:
-      SetJointLimits(Limits::Positions::POS1);
+      SetJointAndGrabberLimits(JointPositions::POS1);
       break;
     case 2:
-      SetJointLimits(Limits::Positions::POS2);
+      SetJointAndGrabberLimits(JointPositions::POS2);
       break;
     case 3:
-      SetJointLimits(Limits::Positions::POS3);
+      SetJointAndGrabberLimits(JointPositions::POS3);
     }
     BPresses = 0;
     BButtonTimer.Reset(); //set time = 0
@@ -148,17 +149,28 @@ void Arm::HandleJointInput() {
 }
 
 void Arm::MoveArmJoint() {
-  //is in range, don't move
-  if ( armJointEncoderDistance < UPPER_JOINT_LIMIT
-    && armJointEncoderDistance > LOWER_JOINT_LIMIT )
-  {
-    armJoint->Set(0.0);
+  MoveWithinLimits (
+    armJoint,
+    armJointEncoderDistance,
+    Speeds::JOINT_UPWARDS_SPEED,
+    Speeds::JOINT_DOWNWARDS_SPEED,
+    UPPER_JOINT_LIMIT,
+    LOWER_JOINT_LIMIT 
+  );
+}
+
+void Arm::MoveWithinLimits( WPI_TalonSRX *motor, int distance,
+  double speedf, double speedb,
+  int limitUpper, int limitLower )
+{
+  if ( limitLower < distance && distance < limitUpper ) {
+    motor->Set(0.0);
   }
-  else if ( armJointEncoderDistance > UPPER_JOINT_LIMIT ) {
-    armJoint->Set(JOINT_DOWNWARDS_SPEED);
+  else if ( limitLower > distance ) {
+    motor->Set(speedf);
   }
-  else if ( armJointEncoderDistance < LOWER_JOINT_LIMIT ) {
-    armJoint->Set(JOINT_UPWARDS_SPEED); 
+  else if ( limitUpper < distance ) {
+    motor->Set(speedb);
   }
 }
 
@@ -171,7 +183,17 @@ void Arm::MoveArmJoint() {
  * under watch dropdown, hit the + and type in variable name
 */
 void Arm::DebugArmJoint() {
+  //Watchers didn't work last time, added timer back in.
+  if ( DebugTimer.HasElapsed(1_s) ) {
+    using namespace std; //Just for this scope
+    cout << "Joint: "     << armJointEncoderDistance << endl;
+    cout << "Grabber: "   << armGrabberEncoderDistance << endl;
+    cout << "Extension: " << armExtensionEncoderDistance << endl;
+    DebugTimer.Reset();
+    DebugTimer.Start();
+  }
  /* --=[ ARM JOINT ]=-- */
+  armGrabberJoint->Set(-armController->GetLeftY());
   // === LOOP CONDITIONS ===
   if (armController->GetRightBumperPressed()) armMovingUp = true;
   if (armController->GetRightBumperReleased()) armMovingUp = false;
@@ -189,14 +211,6 @@ void Arm::DebugArmJoint() {
   }
 
   if (armMovingDown && !armMovingUp) {
-    //used to be negative, I've since reversed encoder direction in Robot.h
-    //so we work with + instead
-    // if (armJointEncoder->GetDistance() > 800) {
-    //   armJoint->Set(-0.5); //move down
-    // }
-    // else if (armJointEncoder->GetDistance() < 600){
-    //   armJoint->Set(0.5); //move up
-    // }
     armJoint->Set(0.5);
   }
   else if (!armMovingUp) {
@@ -204,6 +218,16 @@ void Arm::DebugArmJoint() {
   }
   //===== END IF "LOOPS" =====
  /* --=[ END ]=-- */
+  if ( Brendan ) {
+    do {
+      std::cout << "Brendan Moment" << std::endl;
+    } while(true);
+  }
+  if ( noseIsBleeding ) {
+    do {
+      std::cout << "Nose Is Bleeding" << std::endl;
+    } while(true);
+  }
 }
 
 void Arm::DebugArmExtension() {
@@ -234,20 +258,3 @@ void Arm::DebugArmRetract() {
     armExtension->Set(0.0);
   }
 }
-
-/* --=[ SPOT TO RECORD LIMITS ]=-- */
-/* === JOINT === */
-// 1st UPPER:
-// 1st LOWER:
-
-// 2nd UPPER:
-// 2nd LOWER:
-
-// 3rd UPPER:
-// 3rd LOWER:
-/* === EXTENSION === */
-// EXTEND LOW:
-// EXTEND UP:
-
-// RETRACT LOW:
-// RETRACT UP:

@@ -81,6 +81,7 @@ class Robot : public TimedRobot {
   //int deviceNumber
   WPI_TalonSRX *armJoint = new WPI_TalonSRX(Constants::MotorControllers::ARM_JOINT);
   WPI_TalonSRX *armExtension = new WPI_TalonSRX(Constants::MotorControllers::ARM_EXTENSION);
+  WPI_TalonSRX *armGrabberJoint = new WPI_TalonSRX(Constants::MotorControllers::ARM_GRABBER_JOINT);
   //Define the Compressor and Pneumatic Piston that controls grabber
   //{int compressor, module type}
   Compressor *pcmCompressor = new Compressor(Constants::COMPRESSOR, PneumaticsModuleType::CTREPCM);
@@ -91,13 +92,20 @@ class Robot : public TimedRobot {
     (
       Constants::Encoders::JOINT_ENCODER_ACHANNEL,
       Constants::Encoders::JOINT_ENCODER_BCHANNEL,
-      true,
+      false,
       Encoder::EncodingType::k4X
     );
   Encoder *armExtensionEncoder = new Encoder
     (
       Constants::Encoders::EXTEND_ENCODER_ACHANNEL,
       Constants::Encoders::EXTEND_ENCODER_BCHANNEL,
+      false,
+      Encoder::EncodingType::k4X
+    );
+  Encoder *armGrabberEncoder = new Encoder
+    (
+      Constants::Encoders::GRABBER_ENCODER_ACHANNEL,
+      Constants::Encoders::GRABBER_ENCODER_BCHANNEL,
       false,
       Encoder::EncodingType::k4X
     );
@@ -109,8 +117,10 @@ class Robot : public TimedRobot {
       this->grabberPiston,
       this->armJoint,
       this->armExtension,
+      this->armGrabberJoint,
       this->armJointEncoder,
-      this->armExtensionEncoder
+      this->armExtensionEncoder,
+      this->armGrabberEncoder
     );
   /* --=[###############]=-- */
 };
