@@ -2,17 +2,18 @@
 
 #include <iostream>
 
-Arm::Arm(XboxController *x, DifferentialDrive *d, Solenoid *s, WPI_TalonSRX *w,
-         WPI_TalonSRX *e, WPI_TalonSRX *a, Encoder *r, Encoder *o, Encoder *q)
+Arm::Arm(XboxController *a, DifferentialDrive *b, Solenoid *c, WPI_TalonSRX *d,
+         WPI_TalonSRX *e, WPI_TalonSRX *f, Encoder *g, Encoder *h, Encoder *i)
 :                   //Initializer list
-armController(x),   //armController = x;
-armDrive(d),        //armDrive = d; etc...
-armGrabberPiston(s),
-armJoint(w),
-armExtension(e),
-armJointEncoder(r),
-armExtensionEncoder(o),
-armGrabberEncoder(q)
+armController(a),   //armController = x;
+armDrive(b),        //armDrive = d; etc...
+armGrabberPiston(c),
+armJoint(d),
+armGrabberJoint(e),
+armExtension(f),
+armJointEncoder(g),
+armExtensionEncoder(h),
+armGrabberEncoder(i)
 { //Contructor Body
   //All encoders assume initial position is 0.
   //Therefore, arm must be all the way down and fully retracted at start.
@@ -55,7 +56,6 @@ void Arm::SetExtensionLimits(ExtensionPositions pos) {
   case ExtensionPositions::EXT_L:
     UPPER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_UPPER;
     LOWER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_LOWER;
-    break;
   }
 }
 

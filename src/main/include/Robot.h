@@ -5,6 +5,7 @@
 #include "Arm.h"
 #include "Drive.h"
 #include "Constants.h"
+
 #include <string>
 #include <fmt/core.h>
 #include <frc/Encoder.h>
@@ -60,21 +61,15 @@ class Robot : public TimedRobot {
   XboxController *m_controller = new XboxController(Constants::Controller::DRIVE_XBOX_CONTROLLER);
   /* Here are the current Button Bindings:
    * A = Toggle grabber (pneumatic piston)
-   * X = Move arm upwards at the joint
-   * Y = Move arm downwards at the joint
-   * B = Move the vector motor (currently not in use, was just for testing, remains because of possible future testing)
-   * LB = Extend the arm, needs to be held
-   * RB = Retract the arm, also needs to be held
+   * B = Move to arm positions based on # of presses. Max three.
+   * X = Toggle Arm extended/retracted
    * Left Joystick Y-Axis = Move robot forwards/backwards
    * Right Joystick X-Axis = Rotate robot left/right
    */
-  // Timer *m_timer; //I have no clue if this can be a pointer or not.
-  // units::second_t *startTime;
-  Drive *m_drive = new Drive
-    (
-      this->m_drivetrain,
-      this->m_controller
-    );
+  Drive *m_drive = new Drive (
+    this->m_drivetrain,
+    this->m_controller
+  );
   /* --=[############]=-- */
 
   /* --=[ ARM & GRABBER ]=-- */
@@ -88,39 +83,35 @@ class Robot : public TimedRobot {
   //{Module type, int channel}
   Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, Constants::Solenoids::ARM_SOLENOID);
   //(int achannel, int bchannel, bool reverseDirection, EncodingType type)
-  Encoder *armJointEncoder = new Encoder
-    (
-      Constants::Encoders::JOINT_ENCODER_ACHANNEL,
-      Constants::Encoders::JOINT_ENCODER_BCHANNEL,
-      false,
-      Encoder::EncodingType::k4X
-    );
-  Encoder *armExtensionEncoder = new Encoder
-    (
-      Constants::Encoders::EXTEND_ENCODER_ACHANNEL,
-      Constants::Encoders::EXTEND_ENCODER_BCHANNEL,
-      false,
-      Encoder::EncodingType::k4X
-    );
-  Encoder *armGrabberEncoder = new Encoder
-    (
-      Constants::Encoders::GRABBER_ENCODER_ACHANNEL,
-      Constants::Encoders::GRABBER_ENCODER_BCHANNEL,
-      false,
-      Encoder::EncodingType::k4X
-    );
+  Encoder *armJointEncoder = new Encoder (
+    Constants::Encoders::JOINT_ENCODER_ACHANNEL,
+    Constants::Encoders::JOINT_ENCODER_BCHANNEL,
+    false,
+    Encoder::EncodingType::k4X
+  );
+  Encoder *armExtensionEncoder = new Encoder (
+    Constants::Encoders::EXTEND_ENCODER_ACHANNEL,
+    Constants::Encoders::EXTEND_ENCODER_BCHANNEL,
+    false,
+    Encoder::EncodingType::k4X
+  );
+  Encoder *armGrabberEncoder = new Encoder (
+    Constants::Encoders::GRABBER_ENCODER_ACHANNEL,
+    Constants::Encoders::GRABBER_ENCODER_BCHANNEL,
+    false,
+    Encoder::EncodingType::k4X
+  );
   // XboxController *armController = new XboxController(Constants::Controller::ARM_XBOX_CONTROLLER); //if we have seperate controllers
-  Arm *m_arm = new Arm
-    (
-      this->m_controller,  //armController
-      this->m_drivetrain,
-      this->grabberPiston,
-      this->armJoint,
-      this->armExtension,
-      this->armGrabberJoint,
-      this->armJointEncoder,
-      this->armExtensionEncoder,
-      this->armGrabberEncoder
-    );
+  Arm *m_arm = new Arm (
+    this->m_controller,  //armController
+    this->m_drivetrain,
+    this->grabberPiston,
+    this->armJoint,
+    this->armGrabberJoint,
+    this->armExtension,
+    this->armJointEncoder,
+    this->armExtensionEncoder,
+    this->armGrabberEncoder
+  );
   /* --=[###############]=-- */
 };

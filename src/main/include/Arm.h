@@ -24,15 +24,15 @@ enum Mode {
 class Arm {
  public:
   Arm (
-    XboxController *x,
-    DifferentialDrive *d,
-    Solenoid *s,
-    WPI_TalonSRX *w,
+    XboxController *a,
+    DifferentialDrive *b,
+    Solenoid *c,
+    WPI_TalonSRX *d,
     WPI_TalonSRX *e,
-    WPI_TalonSRX *a,
-    Encoder *r,
-    Encoder *o,
-    Encoder *q
+    WPI_TalonSRX *f,
+    Encoder *g,
+    Encoder *h,
+    Encoder *i
   );
   void SetJointAndGrabberLimits(JointPositions pos);
   void SetExtensionLimits(ExtensionPositions pos);
