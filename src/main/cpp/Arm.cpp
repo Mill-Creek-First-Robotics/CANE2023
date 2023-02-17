@@ -22,7 +22,7 @@ armGrabberEncoder(i)
   armExtensionEncoder->Reset();
   
   SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
-  SetExtensionLimits(ExtensionPositions::EXT_L); //Default extension limits
+  SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
   if ( MODE == Mode::DEBUG ) DebugTimer.Start();
 }
 
@@ -185,10 +185,9 @@ void Arm::MoveWithinLimits( WPI_TalonSRX *motor, int distance,
 void Arm::DebugArmJoint() {
   //Watchers didn't work last time, added timer back in.
   if ( DebugTimer.HasElapsed(1_s) ) {
-    using namespace std; //Just for this scope
-    cout << "Joint: "     << armJointEncoderDistance << endl;
-    cout << "Grabber: "   << armGrabberEncoderDistance << endl;
-    cout << "Extension: " << armExtensionEncoderDistance << endl;
+    SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
+    SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
+    SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
     DebugTimer.Reset();
     DebugTimer.Start();
   }

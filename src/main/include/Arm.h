@@ -11,6 +11,7 @@
 #include <frc/XboxController.h>
 #include <frc/PneumaticsModuleType.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace frc;
 using namespace Constants;
