@@ -2,6 +2,8 @@
 
 #include "Constants.h"
 
+#include <memory>
+
 #include <frc/Timer.h>
 #include <units/time.h>
 #include <frc/Encoder.h>
@@ -14,6 +16,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace frc;
+using namespace std;
 using namespace Constants;
 using namespace Constants::Limits;
 
@@ -24,21 +27,11 @@ enum Mode {
 
 class Arm {
  public:
-  Arm (
-    XboxController *a,
-    DifferentialDrive *b,
-    Solenoid *c,
-    WPI_TalonSRX *d,
-    WPI_TalonSRX *e,
-    WPI_TalonSRX *f,
-    Encoder *g,
-    Encoder *h,
-    Encoder *i
-  );
+  Arm(shared_ptr<XboxController>& controller);
   void SetJointAndGrabberLimits(JointPositions pos);
   void SetExtensionLimits(ExtensionPositions pos);
   void MoveWithinLimits (
-    WPI_TalonSRX *motor,
+    WPI_TalonSRX &motor,
     int distance,
     double speedf,
     double speedb,
@@ -59,15 +52,15 @@ class Arm {
   void DebugArmExtend();
   void DebugArmRetract();
  private:
-  XboxController *armController;
-  DifferentialDrive *armDrive;
-  Solenoid *armGrabberPiston;
-  WPI_TalonSRX *armJoint;
-  WPI_TalonSRX *armGrabberJoint;
-  WPI_TalonSRX *armExtension;
-  Encoder *armJointEncoder;
-  Encoder *armExtensionEncoder;
-  Encoder *armGrabberEncoder;
+  shared_ptr<XboxController> armController;
+  unique_ptr<Solenoid> armGrabberPiston = make_unique<Solenoid>(PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID);
+  unique_ptr<WPI_TalonSRX> armJoint = make_unique<WPI_TalonSRX>(MotorControllers::ARM_JOINT);
+  unique_ptr<WPI_TalonSRX> armGrabberJoint = make_unique<WPI_TalonSRX>(MotorControllers::ARM_GRABBER_JOINT);
+  unique_ptr<WPI_TalonSRX> armExtension = make_unique<WPI_TalonSRX>(MotorControllers::ARM_EXTENSION);
+  unique_ptr<Encoder> armJointEncoder = make_unique<Encoder>(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL);
+  unique_ptr<Encoder> armExtensionEncoder = make_unique<Encoder>(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL);
+  unique_ptr<Encoder> armGrabberEncoder = make_unique<Encoder>(Encoders::GRABBER_ENCODER_ACHANNEL, Encoders::GRABBER_ENCODER_BCHANNEL);
+  unique_ptr<Compressor> compressor = make_unique<Compressor>(COMPRESSOR, PneumaticsModuleType::CTREPCM);
 
   int const MODE = Mode::DEBUG;
 

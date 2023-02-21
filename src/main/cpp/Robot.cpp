@@ -4,10 +4,6 @@ void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   SmartDashboard::PutData("Auto Modes", &m_chooser);
-  
-  m_left->SetInverted(true);
-  pcmCompressor->Disable(); 
-  //pcmCompressor->EnableDigital();
 }
 
 /**
@@ -43,11 +39,9 @@ void Robot::AutonomousInit() {
 }
 
 void Robot::AutonomousPeriodic() {
-  // if (m_autoSelected == kAutoNameCustom) {
-  //   // Custom Auto goes here
-  // } else {
-  //   m_drive->Autonomous();
-  // }
+  if (m_autoSelected == kAutoNameCustom) {
+    m_drive->Autonomous();
+  }
 }
 
 void Robot::TeleopInit() {}

@@ -2,19 +2,7 @@
 
 #include <iostream>
 
-Arm::Arm(XboxController *a, DifferentialDrive *b, Solenoid *c, WPI_TalonSRX *d,
-         WPI_TalonSRX *e, WPI_TalonSRX *f, Encoder *g, Encoder *h, Encoder *i)
-:                   //Initializer list
-armController(a),   //armController = x;
-armDrive(b),        //armDrive = d; etc...
-armGrabberPiston(c),
-armJoint(d),
-armGrabberJoint(e),
-armExtension(f),
-armJointEncoder(g),
-armExtensionEncoder(h),
-armGrabberEncoder(i)
-{ //Contructor Body
+Arm::Arm(shared_ptr<XboxController>& controller) : armController(controller) {
   //All encoders assume initial position is 0.
   //Therefore, arm must be all the way down and fully retracted at start.
   armJointEncoder->Reset();
@@ -91,8 +79,8 @@ void Arm::HandleExtensionInput() {
   MoveArmExtension();
 }
 void Arm::MoveArmExtension() {
-  MoveWithinLimits (
-    armExtension,
+  MoveWithinLimits ( //deref, pass by value. @see: MoveWithinLimits()
+    *armExtension,
     armExtensionEncoderDistance,
     Speeds::EXTEND_SPEED,
     Speeds::RETRACT_SPEED,
@@ -109,7 +97,7 @@ void Arm::HandleGrabberPneumatics() {
 
 void Arm::MoveGrabber() {
   MoveWithinLimits (
-    armGrabberJoint,
+    *armGrabberJoint,
     armGrabberEncoderDistance,
     Speeds::GRABBER_UPWARDS_SPEED,
     Speeds::GRABBER_DOWNWARDS_SPEED,
@@ -150,7 +138,7 @@ void Arm::HandleJointInput() {
 
 void Arm::MoveArmJoint() {
   MoveWithinLimits (
-    armJoint,
+    *armJoint, 
     armJointEncoderDistance,
     Speeds::JOINT_UPWARDS_SPEED,
     Speeds::JOINT_DOWNWARDS_SPEED,
@@ -159,18 +147,19 @@ void Arm::MoveArmJoint() {
   );
 }
 
-void Arm::MoveWithinLimits( WPI_TalonSRX *motor, int distance,
+//recieve motor by reference, was passed by value
+void Arm::MoveWithinLimits( WPI_TalonSRX &motor, int distance,
   double speedf, double speedb,
   int limitUpper, int limitLower )
 {
   if ( limitLower < distance && distance < limitUpper ) {
-    motor->Set(0.0);
+    motor.Set(0.0);
   }
   else if ( limitLower > distance ) {
-    motor->Set(speedf);
+    motor.Set(speedf);
   }
   else if ( limitUpper < distance ) {
-    motor->Set(speedb);
+    motor.Set(speedb);
   }
 }
 

@@ -1,15 +1,13 @@
 #include "Drive.h"
 
-Drive::Drive(DifferentialDrive *d, XboxController *x)
-:
-drive(d),
-controller(x) 
-{/* Empty Constructor Body*/}
-
-void Drive::TuxDrive() {
-    drive->ArcadeDrive(controller->GetLeftY(),-controller->GetRightX() * 0.6);
+Drive::Drive(shared_ptr<XboxController>& controller) : m_controller(controller) {
+  m_timer.Start();
 }
 
-void Drive::Autonomous() {}
+void Drive::TuxDrive() {
+  m_drive->ArcadeDrive(m_controller->GetLeftY(),-m_controller->GetRightX() * 0.6);
+}
 
-void Drive::TimerReset() {}
+void Drive::Autonomous() {
+  
+}
