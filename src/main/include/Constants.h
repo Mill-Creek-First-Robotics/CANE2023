@@ -27,8 +27,7 @@ enum Encoders {
     JOINT_ENCODER_BCHANNEL,
     EXTEND_ENCODER_ACHANNEL = 9,
     EXTEND_ENCODER_BCHANNEL,
-    GRABBER_ENCODER_ACHANNEL = 0,
-    GRABBER_ENCODER_BCHANNEL = 0
+    GRABBER_ENCODER = 0, //analog, only 1 param for DIO port.
 };
 
 enum Solenoids {
