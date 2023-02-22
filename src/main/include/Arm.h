@@ -7,6 +7,8 @@
 #include <frc/Timer.h>
 #include <units/time.h>
 #include <frc/Encoder.h>
+#include <frc/DutyCycleEncoder.h>
+#include <frc/AnalogEncoder.h>
 #include "ctre/Phoenix.h"
 #include <frc/Solenoid.h>
 #include <frc/Compressor.h>
@@ -59,7 +61,7 @@ class Arm {
   unique_ptr<WPI_TalonSRX> armExtension = make_unique<WPI_TalonSRX>(MotorControllers::ARM_EXTENSION);
   unique_ptr<Encoder> armJointEncoder = make_unique<Encoder>(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL);
   unique_ptr<Encoder> armExtensionEncoder = make_unique<Encoder>(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL);
-  unique_ptr<Encoder> armGrabberEncoder = make_unique<Encoder>(Encoders::GRABBER_ENCODER_ACHANNEL, Encoders::GRABBER_ENCODER_BCHANNEL);
+  unique_ptr<AnalogEncoder> armGrabberEncoder = make_unique<AnalogEncoder>(0);
   unique_ptr<Compressor> compressor = make_unique<Compressor>(COMPRESSOR, PneumaticsModuleType::CTREPCM);
 
   int const MODE = Mode::DEBUG;

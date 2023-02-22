@@ -8,10 +8,11 @@ Arm::Arm(shared_ptr<XboxController>& controller) : armController(controller) {
   armJointEncoder->Reset();
   armGrabberEncoder->Reset();
   armExtensionEncoder->Reset();
+  armGrabberEncoder->SetDistancePerRotation(4.0);
   
   SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
   SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
-  if ( MODE == Mode::DEBUG ) DebugTimer.Start();
+  DebugTimer.Start();
 }
 
 void Arm::SetJointAndGrabberLimits(JointPositions pos) {
@@ -177,11 +178,12 @@ void Arm::DebugArmJoint() {
     SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
     SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
     SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
+    std::cout << armGrabberEncoder->GetDistance() << std::endl;
     DebugTimer.Reset();
     DebugTimer.Start();
   }
  /* --=[ ARM JOINT ]=-- */
-  armGrabberJoint->Set(-armController->GetLeftY());
+  armGrabberJoint->Set(armController->GetLeftY());
   // === LOOP CONDITIONS ===
   if (armController->GetRightBumperPressed()) armMovingUp = true;
   if (armController->GetRightBumperReleased()) armMovingUp = false;
