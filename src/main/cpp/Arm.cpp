@@ -50,8 +50,8 @@ void Arm::SetExtensionLimits(ExtensionPositions pos) {
 
 void Arm::ArmUpdate() {
  /* --=[ UPDATE VARIABLES]=-- */
+  armGrabberEncoderDistance = armGrabberEncoder->GetAbsolutePosition();
   armJointEncoderDistance = armJointEncoder->GetDistance();
-  armGrabberEncoderDistance = armGrabberEncoder->GetDistance();
   armExtensionEncoderDistance = armExtensionEncoder->GetDistance();
  /* --=[ END ]=-- */
 
@@ -178,7 +178,7 @@ void Arm::DebugArmJoint() {
     SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
     SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
     SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
-    std::cout << armGrabberEncoder->GetDistance() << std::endl;
+    std::cout << armGrabberEncoder->GetAbsolutePosition() << std::endl;
     DebugTimer.Reset();
     DebugTimer.Start();
   }

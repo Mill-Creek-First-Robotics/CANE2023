@@ -47,6 +47,10 @@ class Arm {
   void HandleGrabberPneumatics();
   void HandleJointInput();
   void HandleExtensionInput();
+  
+  void AutoMoveArmToPosition(JointPositions pos);
+  void AutoExtendArm();
+  void AutoRetractArm();
   //debug functions are for manually moving respective parts
   //useful for getting encoder values to set accurate limits
   void DebugArmJoint();         
@@ -61,7 +65,7 @@ class Arm {
   unique_ptr<WPI_TalonSRX> armExtension = make_unique<WPI_TalonSRX>(MotorControllers::ARM_EXTENSION);
   unique_ptr<Encoder> armJointEncoder = make_unique<Encoder>(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL);
   unique_ptr<Encoder> armExtensionEncoder = make_unique<Encoder>(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL);
-  unique_ptr<AnalogEncoder> armGrabberEncoder = make_unique<AnalogEncoder>(0);
+  unique_ptr<AnalogEncoder> armGrabberEncoder = make_unique<AnalogEncoder>(Encoders::GRABBER_ENCODER);
   unique_ptr<Compressor> compressor = make_unique<Compressor>(COMPRESSOR, PneumaticsModuleType::CTREPCM);
 
   int const MODE = Mode::DEBUG;

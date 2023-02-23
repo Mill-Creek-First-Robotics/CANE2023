@@ -7,33 +7,52 @@ namespace Constants {
 int const COMPRESSOR = 0;
 
 //Enums so we don't have to restructure this later
+/**
+ * @desc: Controller index as defined in driverstation.
+ */
 enum Controller {
     DRIVE_XBOX_CONTROLLER = 0,
     ARM_XBOX_CONTROLLER
 };
 
+/**
+ * @desc: Enter motor controller ports from Phoenix here. 
+ */
 enum MotorControllers {
+    //= Arm
     ARM_GRABBER_JOINT = 7,
     ARM_EXTENSION = 0,
     ARM_JOINT = 45,
+    //= Drivetrain
     BACK_RIGHT = 1,
     FRONT_RIGHT,
     BACK_LEFT = 13,
     FRONT_LEFT,
 };
 
+/**
+ * @desc: Encoder class needs a and b channels as params.
+ * @note: GRABBER_ENCODER is an AnalogEncoder which only needs 1 argument, the DIO port. 
+ */
 enum Encoders {
-    JOINT_ENCODER_ACHANNEL =5,
+    JOINT_ENCODER_ACHANNEL = 5,
     JOINT_ENCODER_BCHANNEL,
     EXTEND_ENCODER_ACHANNEL = 9,
     EXTEND_ENCODER_BCHANNEL,
-    GRABBER_ENCODER = 0, //analog, only 1 param for DIO port.
+    GRABBER_ENCODER = 0,
 };
 
+/**
+ * @desc: channel for solenoids.
+ */
 enum Solenoids {
     ARM_SOLENOID = 0
 };
 
+/**
+ * @desc: Speed constants for both the arm and drivetrain.
+ * Speeds is a namespace because enums can't have double values
+ */
 namespace Speeds {
  /* === ARM === */
   units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
@@ -49,7 +68,7 @@ namespace Speeds {
 
 //Limits for the arm positions
 namespace Limits {
-enum JointPositions {
+enum class JointPositions {
   POS1,
   POS2,
   POS3
@@ -72,7 +91,7 @@ enum GrabberLimits {
   G_THREE_LOWER
 };
 
-enum ExtensionPositions {
+enum class ExtensionPositions {
   EXT_U, //Upper
   EXT_L  //Lower
 };
