@@ -10,6 +10,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/Timer.h>
 using namespace std;
 using namespace frc;
 
@@ -27,7 +28,7 @@ class Robot : public TimedRobot {
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-
+  frc::Timer m_timer;
  private:
   /* --=[ DEFAULT VARIABLES ]=-- */
   SendableChooser<string> m_chooser;

@@ -9,6 +9,9 @@ void Robot::RobotInit() {
   m_left->SetInverted(true);
   pcmCompressor->Disable(); 
   pcmCompressor->EnableDigital();
+  
+  m_timer.Start();
+
 }
 
 /**
@@ -32,7 +35,9 @@ void Robot::RobotPeriodic() {}
  * if-else structure below with additional strings. If using the SendableChooser
  * make sure to add them to the chooser code above as well.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit() {m_timer.Reset();} 
+  
+  
   // m_autoSelected = m_chooser->GetSelected();
   // // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   // //     kAutoNameDefault);
@@ -43,15 +48,16 @@ void Robot::AutonomousInit() {
   // } else {
   //   m_drive->TimerReset();
   // }
+
+
+void Robot::AutonomousPeriodic() 
+{
+  if (m_timer.Get() < 2_s)
+  {m_drivetrain->ArcadeDrive(0.5, 0.0);}
+  else {m_drivetrain->ArcadeDrive(0.0, 0.0);}
 }
 
-void Robot::AutonomousPeriodic() {
-  // if (m_autoSelected == kAutoNameCustom) {
-  //   // Custom Auto goes here
-  // } else {
-  //   m_drive->Autonomous();
-  // }
-}
+
 
 void Robot::TeleopInit() {}
 
