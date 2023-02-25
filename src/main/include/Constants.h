@@ -21,8 +21,8 @@ enum Controller {
 enum MotorControllers {
     //= Arm
     ARM_GRABBER_JOINT = 7,
-    ARM_EXTENSION = 0,
-    ARM_JOINT = 45,
+    ARM_EXTENSION = 45,
+    ARM_JOINT = 0,
     //= Drivetrain
     BACK_RIGHT = 1,
     FRONT_RIGHT,
@@ -35,11 +35,11 @@ enum MotorControllers {
  * @note: GRABBER_ENCODER is an AnalogEncoder which only needs 1 argument, the DIO port. 
  */
 enum Encoders {
-    JOINT_ENCODER_ACHANNEL = 5,
+    JOINT_ENCODER_ACHANNEL = 9,
     JOINT_ENCODER_BCHANNEL,
-    EXTEND_ENCODER_ACHANNEL = 9,
+    EXTEND_ENCODER_ACHANNEL = 0,
     EXTEND_ENCODER_BCHANNEL,
-    GRABBER_ENCODER = 0,
+    GRABBER_ENCODER,
 };
 
 /**
@@ -58,8 +58,8 @@ namespace Speeds {
   units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
   double const JOINT_UPWARDS_SPEED = -0.3;
   double const JOINT_DOWNWARDS_SPEED = 0.3;
-  double const EXTEND_SPEED = 0.2;
-  double const RETRACT_SPEED = -0.2;
+  double const EXTEND_SPEED = -0.5;
+  double const RETRACT_SPEED = 1.0;
   double const GRABBER_UPWARDS_SPEED = -0.2;
   double const GRABBER_DOWNWARDS_SPEED = 0.2;
  /* === DRIVETRAIN === */
@@ -74,8 +74,8 @@ enum class JointPositions {
   POS3
 };
 enum JointLimits {
-  ONE_UPPER,
-  ONE_LOWER,
+  ONE_UPPER = 100,
+  ONE_LOWER = 0,
   TWO_UPPER,
   TWO_LOWER,
   THREE_UPPER,
