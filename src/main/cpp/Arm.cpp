@@ -54,7 +54,10 @@ void Arm::ArmUpdate() {
   armJointEncoderDistance = armJointEncoder->GetDistance();
   armExtensionEncoderDistance = armExtensionEncoder->GetDistance();
  /* --=[ END ]=-- */
-
+  if ( armController->GetLeftStickButtonPressed() ) {
+    if ( MODE == Mode::DEBUG ) MODE = Mode::NORMAL;
+    else MODE = Mode::DEBUG;
+  }
  /* --=[ FUNCTION CALLS ]=-- */
   if ( MODE == Mode::NORMAL ) {
     HandleJointInput();
@@ -162,6 +165,19 @@ void Arm::MoveWithinLimits( WPI_TalonSRX &motor, int distance,
   else if ( limitUpper < distance ) {
     motor.Set(speedb);
   }
+}
+
+
+void Arm::AutoMoveArmToPosition(JointPositions pos) {
+
+}
+
+void Arm::AutoExtendArm() {
+
+}
+
+void Arm::AutoRetractArm() {
+
 }
 
 /* --=========[ DEBUG FUNCTIONS ]========-- */

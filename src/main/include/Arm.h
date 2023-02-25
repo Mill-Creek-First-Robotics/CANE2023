@@ -68,7 +68,7 @@ class Arm {
   unique_ptr<AnalogEncoder> armGrabberEncoder = make_unique<AnalogEncoder>(Encoders::GRABBER_ENCODER);
   unique_ptr<Compressor> compressor = make_unique<Compressor>(COMPRESSOR, PneumaticsModuleType::CTREPCM);
 
-  int const MODE = Mode::DEBUG;
+  int MODE = Mode::DEBUG;
 
   int UPPER_JOINT_LIMIT;
   int LOWER_JOINT_LIMIT;
