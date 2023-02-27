@@ -224,16 +224,6 @@ void Arm::DebugArmJoint() {
   }
   //===== END IF "LOOPS" =====
  /* --=[ END ]=-- */
-  if ( Brendan ) {
-    do {
-      std::cout << "Brendan Moment" << std::endl;
-    } while(true);
-  }
-  if ( noseIsBleeding ) {
-    do {
-      std::cout << "Nose Is Bleeding" << std::endl;
-    } while(true);
-  }
 }
 
 void Arm::DebugArmExtension() {
@@ -258,7 +248,7 @@ void Arm::DebugArmExtend() {
 
 void Arm::DebugArmRetract() {
   if(armIsRetracting && !armIsExtending) {
-    armExtension->Set(0.1);
+    armExtension->Set(0.5);
   }
   else if (!armIsExtending) {
     armExtension->Set(0.0);

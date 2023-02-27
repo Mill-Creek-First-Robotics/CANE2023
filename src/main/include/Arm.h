@@ -92,7 +92,4 @@ class Arm {
   bool armIsExtending;
   bool armIsRetracting;
   Timer DebugTimer;
- 
-  bool Brendan;
-  bool noseIsBleeding;
 };
