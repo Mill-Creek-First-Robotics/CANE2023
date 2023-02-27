@@ -19,15 +19,15 @@ enum Controller {
  * @desc: Enter motor controller ports from Phoenix here. 
  */
 enum MotorControllers {
-  //= Arm
-  ARM_GRABBER_JOINT = 7,
-  ARM_EXTENSION = 0,
-  ARM_JOINT = 45,
-  //= Drivetrain
-  BACK_RIGHT = 1,
-  FRONT_RIGHT,
-  BACK_LEFT = 13,
-  FRONT_LEFT,
+    //= Arm
+    ARM_GRABBER_JOINT = 7,
+    ARM_EXTENSION = 45,
+    ARM_JOINT = 0,
+    //= Drivetrain
+    BACK_RIGHT = 1,
+    FRONT_RIGHT,
+    BACK_LEFT = 13,
+    FRONT_LEFT,
 };
 
 /**
@@ -74,8 +74,8 @@ enum class JointPositions {
   POS3
 };
 enum JointLimits {
-  ONE_UPPER,
-  ONE_LOWER,
+  ONE_UPPER = 100,
+  ONE_LOWER = 0,
   TWO_UPPER,
   TWO_LOWER,
   THREE_UPPER,
