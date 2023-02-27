@@ -3,37 +3,44 @@
 #include "Constants.h"
 
 #include <memory>
-
+#include <stdexcept>
+#include <frc/SPI.h>
+#include <frc/SerialPort.h>
+#include "AHRS.h"
 #include "ctre/Phoenix.h"
+
 #include <frc/Timer.h>
 #include <units/time.h>
 #include <frc/XboxController.h>
 #include <frc/motorcontrol/Spark.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/motorcontrol/MotorControllerGroup.h>
-//#include <frc/SpeedControllerGroup.h>
+
 using namespace frc;
 using namespace std;
 
 class Drive {
  public:
-
+ 
   Drive(shared_ptr<XboxController>& controller); //Constructor
   void TuxDrive(); //Actual driving
   void Autonomous();
 
  private:
-  
+
   shared_ptr<XboxController> m_controller;
-  unique_ptr<WPI_TalonSRX> m_frontLeft = make_unique<WPI_TalonSRX>(Constants::MotorControllers::FRONT_LEFT);
-  unique_ptr<WPI_TalonSRX> m_backLeft = make_unique<WPI_TalonSRX>(Constants::MotorControllers::BACK_LEFT);
-  unique_ptr<MotorControllerGroup> m_left = make_unique<MotorControllerGroup>(*m_frontLeft, *m_backLeft);
+  WPI_TalonSRX m_frontLeft{Constants::MotorControllers::FRONT_LEFT};
+  WPI_TalonSRX m_backLeft{Constants::MotorControllers::BACK_LEFT};
+  MotorControllerGroup m_left{m_frontLeft, m_backLeft};
 
-  unique_ptr<WPI_TalonSRX> m_frontRight = make_unique<WPI_TalonSRX>(Constants::MotorControllers::FRONT_RIGHT);
-  unique_ptr<WPI_TalonSRX> m_backRight = make_unique<WPI_TalonSRX>(Constants::MotorControllers::BACK_RIGHT);
-  unique_ptr<MotorControllerGroup> m_right = make_unique<MotorControllerGroup>(*m_frontRight, *m_backRight);
+  WPI_TalonSRX m_frontRight{Constants::MotorControllers::FRONT_RIGHT};
+  WPI_TalonSRX m_backRight{Constants::MotorControllers::BACK_RIGHT};
+  MotorControllerGroup m_right{m_frontRight, m_backRight};
 
-  unique_ptr<DifferentialDrive> m_drive = make_unique<DifferentialDrive>(*m_left,*m_right);
+  DifferentialDrive m_drive{m_left,m_right};
+
+ 
+  //AHRS m_gyro{SPI::Port::kMXP};
 
   Timer m_timer;
 };

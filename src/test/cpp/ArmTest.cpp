@@ -22,6 +22,16 @@ TEST_F(ArmTest, ArmPistonDefaultFalse) {
   EXPECT_EQ(m_solenoid.GetOutput(),false);
 }
 
+// TEST_F(ArmTest, ArmExtensionMovesManually) {
+//   WPI_TalonSRX* extensionSim = m_arm.GetExtensionMotor();
+//   EXPECT_EQ(extensionSim->GetMotorOutputPercent(),0.0);
+//   m_simController.SetYButton(true);
+//   m_arm.DebugArmExtension();
+//   EXPECT_EQ(extensionSim->GetMotorOutputPercent(),0.5);
+//   m_simController.SetYButton(false);
+//   m_arm.DebugArmExtension();
+//   EXPECT_EQ(extensionSim->GetMotorOutputPercent(),0.0);
+// }
 /**
  * @note: This test will fail because testing OOP code is a pain. 
  */

@@ -40,15 +40,15 @@ void Robot::AutonomousInit() {
 
 void Robot::AutonomousPeriodic() {
   if (m_autoSelected == kAutoNameCustom) {
-    m_drive->Autonomous();
+    m_drive.Autonomous();
   }
 }
 
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  m_drive->TuxDrive();
-  m_arm->ArmUpdate();
+  m_drive.TuxDrive();
+  m_arm.ArmUpdate();
 }
 
 void Robot::DisabledInit() {}

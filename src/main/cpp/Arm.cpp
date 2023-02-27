@@ -5,10 +5,10 @@
 Arm::Arm(shared_ptr<XboxController>& controller) : armController(controller) {
   //All encoders assume initial position is 0.
   //Therefore, arm must be all the way down and fully retracted at start.
-  armJointEncoder->Reset();
-  armGrabberEncoder->Reset();
-  armExtensionEncoder->Reset();
-  armGrabberEncoder->SetDistancePerRotation(4.0);
+  armJointEncoder.Reset();
+  armGrabberEncoder.Reset();
+  armExtensionEncoder.Reset();
+  armGrabberEncoder.SetDistancePerRotation(4.0);
   
   SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
   SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
@@ -50,9 +50,9 @@ void Arm::SetExtensionLimits(ExtensionPositions pos) {
 
 void Arm::ArmUpdate() {
  /* --=[ UPDATE VARIABLES]=-- */
-  armGrabberEncoderDistance = armGrabberEncoder->GetAbsolutePosition();
-  armJointEncoderDistance = armJointEncoder->GetDistance();
-  armExtensionEncoderDistance = armExtensionEncoder->GetDistance();
+  armGrabberEncoderDistance = armGrabberEncoder.GetAbsolutePosition();
+  armJointEncoderDistance = armJointEncoder.GetDistance();
+  armExtensionEncoderDistance = armExtensionEncoder.GetDistance();
  /* --=[ END ]=-- */
   if ( armController->GetLeftStickButtonPressed() ) {
     if ( MODE == Mode::DEBUG ) MODE = Mode::NORMAL;
@@ -84,7 +84,7 @@ void Arm::HandleExtensionInput() {
 }
 void Arm::MoveArmExtension() {
   MoveWithinLimits ( //deref, pass by value. @see: MoveWithinLimits()
-    *armExtension,
+    &armExtension,
     armExtensionEncoderDistance,
     Speeds::EXTEND_SPEED,
     Speeds::RETRACT_SPEED,
@@ -95,13 +95,13 @@ void Arm::MoveArmExtension() {
 
 void Arm::HandleGrabberPneumatics() {
   if ( armController->GetAButtonPressed() ) {
-    armGrabberPiston->Toggle();
+    armGrabberPiston.Toggle();
   }
 }
 
 void Arm::MoveGrabber() {
   MoveWithinLimits (
-    *armGrabberJoint,
+    &armGrabberJoint,
     armGrabberEncoderDistance,
     Speeds::GRABBER_UPWARDS_SPEED,
     Speeds::GRABBER_DOWNWARDS_SPEED,
@@ -142,7 +142,7 @@ void Arm::HandleJointInput() {
 
 void Arm::MoveArmJoint() {
   MoveWithinLimits (
-    *armJoint, 
+    &armJoint, 
     armJointEncoderDistance,
     Speeds::JOINT_UPWARDS_SPEED,
     Speeds::JOINT_DOWNWARDS_SPEED,
@@ -152,18 +152,18 @@ void Arm::MoveArmJoint() {
 }
 
 //recieve motor by reference, was passed by value
-void Arm::MoveWithinLimits( WPI_TalonSRX &motor, int distance,
+void Arm::MoveWithinLimits( WPI_TalonSRX *motor, int distance,
   double speedf, double speedb,
   int limitUpper, int limitLower )
 {
   if ( limitLower < distance && distance < limitUpper ) {
-    motor.Set(0.0);
+    motor->Set(0.0);
   }
   else if ( limitLower > distance ) {
-    motor.Set(speedf);
+    motor->Set(speedf);
   }
   else if ( limitUpper < distance ) {
-    motor.Set(speedb);
+    motor->Set(speedb);
   }
 }
 
@@ -194,12 +194,12 @@ void Arm::DebugArmJoint() {
     SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
     SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
     SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
-    std::cout << armGrabberEncoder->GetAbsolutePosition() << std::endl;
+    std::cout << armGrabberEncoder.GetAbsolutePosition() << std::endl;
     DebugTimer.Reset();
     DebugTimer.Start();
   }
  /* --=[ ARM JOINT ]=-- */
-  armGrabberJoint->Set(armController->GetLeftY());
+  armGrabberJoint.Set(armController->GetLeftY());
   // === LOOP CONDITIONS ===
   if (armController->GetRightBumperPressed()) armMovingUp = true;
   if (armController->GetRightBumperReleased()) armMovingUp = false;
@@ -210,17 +210,17 @@ void Arm::DebugArmJoint() {
   //===== IF "LOOPS" =====
   //make sure that if both buttons are pressed, arm doesn't try to move both ways
   if (armMovingUp && !armMovingDown) {
-    armJoint->Set(-0.5);
+    armJoint.Set(-0.5);
   }
   else if (!armMovingDown) { //arm isn't currently trying to move back
-    armJoint->Set(0.0);
+    armJoint.Set(0.0);
   }
 
   if (armMovingDown && !armMovingUp) {
-    armJoint->Set(0.5);
+    armJoint.Set(0.5);
   }
   else if (!armMovingUp) {
-    armJoint->Set(0.0);
+    armJoint.Set(0.0);
   }
   //===== END IF "LOOPS" =====
  /* --=[ END ]=-- */
@@ -239,18 +239,18 @@ void Arm::DebugArmExtension() {
 
 void Arm::DebugArmExtend() {
   if(armIsExtending && !armIsRetracting) {
-    armExtension->Set(-0.5);
+    armExtension.Set(-0.5);
   }
   else if (!armIsRetracting) {
-    armExtension->Set(0.0);
+    armExtension.Set(0.0);
   }
 }
 
 void Arm::DebugArmRetract() {
   if(armIsRetracting && !armIsExtending) {
-    armExtension->Set(0.5);
+    armExtension.Set(0.5);
   }
   else if (!armIsExtending) {
-    armExtension->Set(0.0);
+    armExtension.Set(0.0);
   }
 }

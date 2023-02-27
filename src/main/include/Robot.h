@@ -48,6 +48,6 @@ class Robot : public TimedRobot {
    * Left Joystick Y-Axis = Move robot forwards/backwards
    * Right Joystick X-Axis = Rotate robot left/right
    */
-  unique_ptr<Arm> m_arm = make_unique<Arm>(m_controller);
-  unique_ptr<Drive> m_drive = make_unique<Drive>(m_controller);
+  Arm m_arm{m_controller};
+  Drive m_drive{m_controller};
 };

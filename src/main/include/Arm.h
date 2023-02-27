@@ -22,7 +22,7 @@ using namespace std;
 using namespace Constants;
 using namespace Constants::Limits;
 
-enum Mode {
+enum class Mode {
   DEBUG,
   NORMAL
 };
@@ -33,7 +33,7 @@ class Arm {
   void SetJointAndGrabberLimits(JointPositions pos);
   void SetExtensionLimits(ExtensionPositions pos);
   void MoveWithinLimits (
-    WPI_TalonSRX &motor,
+    WPI_TalonSRX* motor,
     int distance,
     double speedf,
     double speedb,
@@ -57,18 +57,23 @@ class Arm {
   void DebugArmExtension();
   void DebugArmExtend();
   void DebugArmRetract();
+
+  // Unit Testing
+  WPI_TalonSRX *GetExtensionMotor() {
+    return &armExtension;
+  }
  private:
   shared_ptr<XboxController> armController;
-  unique_ptr<WPI_TalonSRX> armJoint = make_unique<WPI_TalonSRX>(MotorControllers::ARM_JOINT);
-  unique_ptr<WPI_TalonSRX> armGrabberJoint = make_unique<WPI_TalonSRX>(MotorControllers::ARM_GRABBER_JOINT);
-  unique_ptr<WPI_TalonSRX> armExtension = make_unique<WPI_TalonSRX>(MotorControllers::ARM_EXTENSION);
-  unique_ptr<Encoder> armJointEncoder = make_unique<Encoder>(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL);
-  unique_ptr<Encoder> armExtensionEncoder = make_unique<Encoder>(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL);
-  unique_ptr<AnalogEncoder> armGrabberEncoder = make_unique<AnalogEncoder>(Encoders::GRABBER_ENCODER);
-  unique_ptr<Solenoid> armGrabberPiston = make_unique<Solenoid>(PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID);
-  unique_ptr<Compressor> compressor = make_unique<Compressor>(COMPRESSOR, PneumaticsModuleType::CTREPCM);
+  WPI_TalonSRX armJoint{MotorControllers::ARM_JOINT};
+  WPI_TalonSRX armGrabberJoint{MotorControllers::ARM_GRABBER_JOINT};
+  WPI_TalonSRX armExtension{MotorControllers::ARM_EXTENSION};
+  Encoder armJointEncoder{Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL};
+  Encoder armExtensionEncoder{Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL};
+  AnalogEncoder armGrabberEncoder{Encoders::GRABBER_ENCODER};
+  Solenoid armGrabberPiston{PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID};
+  Compressor compressor{COMPRESSOR, PneumaticsModuleType::CTREPCM};
 
-  int MODE = Mode::DEBUG;
+  Mode MODE = Mode::DEBUG;
 
   int UPPER_JOINT_LIMIT;
   int LOWER_JOINT_LIMIT;
