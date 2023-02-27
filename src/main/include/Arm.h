@@ -59,13 +59,13 @@ class Arm {
   void DebugArmRetract();
  private:
   shared_ptr<XboxController> armController;
-  unique_ptr<Solenoid> armGrabberPiston = make_unique<Solenoid>(PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID);
   unique_ptr<WPI_TalonSRX> armJoint = make_unique<WPI_TalonSRX>(MotorControllers::ARM_JOINT);
   unique_ptr<WPI_TalonSRX> armGrabberJoint = make_unique<WPI_TalonSRX>(MotorControllers::ARM_GRABBER_JOINT);
   unique_ptr<WPI_TalonSRX> armExtension = make_unique<WPI_TalonSRX>(MotorControllers::ARM_EXTENSION);
   unique_ptr<Encoder> armJointEncoder = make_unique<Encoder>(Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL);
   unique_ptr<Encoder> armExtensionEncoder = make_unique<Encoder>(Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL);
   unique_ptr<AnalogEncoder> armGrabberEncoder = make_unique<AnalogEncoder>(Encoders::GRABBER_ENCODER);
+  unique_ptr<Solenoid> armGrabberPiston = make_unique<Solenoid>(PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID);
   unique_ptr<Compressor> compressor = make_unique<Compressor>(COMPRESSOR, PneumaticsModuleType::CTREPCM);
 
   int MODE = Mode::DEBUG;
