@@ -13,6 +13,8 @@ Arm::Arm(shared_ptr<XboxController>& controller) : armController(controller) {
   SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
   SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
   DebugTimer.Start();
+  compressor.Disable();
+  compressor.EnableDigital();
 }
 
 void Arm::SetJointAndGrabberLimits(JointPositions pos) {
@@ -61,16 +63,14 @@ void Arm::ArmUpdate() {
  /* --=[ FUNCTION CALLS ]=-- */
   if ( MODE == Mode::NORMAL ) {
     HandleJointInput();
-    HandleGrabberPneumatics();
     MoveGrabber();
-    //Will not work because currently the arm extension does not have an encoder...
-    //HandleExtensionInput();
+    HandleExtensionInput();
   }
   else if ( MODE == Mode::DEBUG ) {
     DebugArmExtension();
     DebugArmJoint();
-    HandleGrabberPneumatics();
   }
+  HandleGrabberPneumatics();
  /* --=[ END ]=-- */
 }
 
@@ -151,12 +151,11 @@ void Arm::MoveArmJoint() {
   );
 }
 
-//recieve motor by reference, was passed by value
 void Arm::MoveWithinLimits( WPI_TalonSRX *motor, int distance,
   double speedf, double speedb,
   int limitUpper, int limitLower )
 {
-  if ( limitLower < distance && distance < limitUpper ) {
+  if ( limitLower + 30 < distance && distance < limitUpper - 30 ) { //offset so arm doesn't vibrate in place
     motor->Set(0.0);
   }
   else if ( limitLower > distance ) {
@@ -169,15 +168,45 @@ void Arm::MoveWithinLimits( WPI_TalonSRX *motor, int distance,
 
 
 void Arm::AutoMoveArmToPosition(JointPositions pos) {
-
+  int low{};
+  int high{};
+  switch (pos) {
+  case JointPositions::POS1:
+    low = JointLimits::ONE_LOWER;
+    high = JointLimits::ONE_UPPER;
+    break;
+  case JointPositions::POS2:
+    low = JointLimits::TWO_LOWER;
+    high = JointLimits::TWO_UPPER;
+    break;
+  case JointPositions::POS3:
+    low = JointLimits::THREE_LOWER;
+    high = JointLimits::THREE_UPPER;
+  }
+  while ( armJointEncoderDistance > high ) {
+    armJoint.Set(Speeds::JOINT_DOWNWARDS_SPEED);
+  }
+  while ( armJointEncoderDistance < low ) {
+    armJoint.Set(Speeds::JOINT_UPWARDS_SPEED);
+  }
 }
 
 void Arm::AutoExtendArm() {
-
+  while ( armExtensionEncoderDistance > ExtensionLimits::EXT_U_UPPER ) {
+    armExtension.Set(Speeds::RETRACT_SPEED);
+  }
+  while ( armExtensionEncoderDistance < ExtensionLimits::EXT_U_LOWER ) {
+    armExtension.Set(Speeds::EXTEND_SPEED);
+  }
 }
 
 void Arm::AutoRetractArm() {
-
+  while ( armExtensionEncoderDistance > ExtensionLimits::EXT_L_UPPER ) {
+    armExtension.Set(Speeds::RETRACT_SPEED);
+  }
+  while ( armExtensionEncoderDistance < ExtensionLimits::EXT_L_LOWER ) {
+    armExtension.Set(Speeds::EXTEND_SPEED);
+  }
 }
 
 /* --=========[ DEBUG FUNCTIONS ]========-- */
