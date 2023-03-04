@@ -12,7 +12,6 @@ Arm::Arm(shared_ptr<XboxController>& controller) : armController(controller) {
   
   SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
   SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
-  DebugTimer.Start();
   compressor.Disable();
   compressor.EnableDigital();
 }
@@ -52,7 +51,7 @@ void Arm::SetExtensionLimits(ExtensionPositions pos) {
 
 void Arm::ArmUpdate() {
  /* --=[ UPDATE VARIABLES]=-- */
-  armGrabberEncoderDistance = armGrabberEncoder.GetAbsolutePosition();
+  armGrabberEncoderDistance = armGrabberEncoder.GetDistance();
   armJointEncoderDistance = armJointEncoder.GetDistance();
   armExtensionEncoderDistance = armExtensionEncoder.GetDistance();
  /* --=[ END ]=-- */
@@ -219,16 +218,10 @@ void Arm::AutoRetractArm() {
 */
 void Arm::DebugArmJoint() {
   //Watchers didn't work last time, added timer back in.
-  if ( DebugTimer.HasElapsed(1_s) ) {
-    SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
-    SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
-    SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
-    std::cout << armGrabberEncoder.GetAbsolutePosition() << std::endl;
-    DebugTimer.Reset();
-    DebugTimer.Start();
-  }
+  SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
+  SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
+  SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
  /* --=[ ARM JOINT ]=-- */
-  armGrabberJoint.Set(armController->GetLeftY());
   // === LOOP CONDITIONS ===
   if (armController->GetRightBumperPressed()) armMovingUp = true;
   if (armController->GetRightBumperReleased()) armMovingUp = false;
@@ -264,11 +257,27 @@ void Arm::DebugArmExtension() {
 
   DebugArmExtend();
   DebugArmRetract();
+
+  // if ( armController->GetLeftTriggerAxis() > 0.0 ) {
+    armGrabberJoint.Set(-1.0);
+  // }
+  // else if ( armController->GetRightTriggerAxis() > 0.0 ) {
+    // armGrabberJoint.Set(-1.0);
+  // }
+  // else {
+    // armGrabberJoint.Set(0.0);
+  // }
+
+  if ( armController->GetRightStickButtonPressed() ) {
+    armJointEncoder.Reset();
+    armGrabberEncoder.Reset();
+    armExtensionEncoder.Reset();
+  }
 }
 
 void Arm::DebugArmExtend() {
   if(armIsExtending && !armIsRetracting) {
-    armExtension.Set(-0.5);
+    armExtension.Set(Speeds::EXTEND_SPEED);
   }
   else if (!armIsRetracting) {
     armExtension.Set(0.0);
@@ -277,7 +286,7 @@ void Arm::DebugArmExtend() {
 
 void Arm::DebugArmRetract() {
   if(armIsRetracting && !armIsExtending) {
-    armExtension.Set(0.5);
+    armExtension.Set(Speeds::RETRACT_SPEED);
   }
   else if (!armIsExtending) {
     armExtension.Set(0.0);

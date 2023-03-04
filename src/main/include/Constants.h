@@ -36,10 +36,10 @@ enum MotorControllers {
  */
 namespace Encoders {
 int const GRABBER_ENCODER = 0;
-int const JOINT_ENCODER_ACHANNEL = 0;
-int const JOINT_ENCODER_BCHANNEL = 1;
-int const EXTEND_ENCODER_ACHANNEL = 2;
-int const EXTEND_ENCODER_BCHANNEL = 3;
+int const JOINT_ENCODER_ACHANNEL = 3;
+int const JOINT_ENCODER_BCHANNEL = 4;
+int const EXTEND_ENCODER_ACHANNEL = 1;
+int const EXTEND_ENCODER_BCHANNEL = 2;
 } //namespace Encoders
 
 /**
@@ -73,33 +73,33 @@ enum class JointPositions {
   POS2,
   POS3
 };
-enum JointLimits {
-  ONE_UPPER = 100,
-  ONE_LOWER = 0,
-  TWO_UPPER,
-  TWO_LOWER,
-  THREE_UPPER,
-  THREE_LOWER
-};
+namespace JointLimits {
+  double const ONE_UPPER = 0;
+  double const ONE_LOWER = 0;
+  double const TWO_UPPER = 0;
+  double const TWO_LOWER = 0;
+  double const THREE_UPPER = 0;
+  double const THREE_LOWER = 0;
+} //namespace JointLimits
 //Follows JointPositions because the grabber follows the Arm
-enum GrabberLimits {
-  G_ONE_UPPER,
-  G_ONE_LOWER,
-  G_TWO_UPPER,
-  G_TWO_LOWER,
-  G_THREE_UPPER,
-  G_THREE_LOWER
-};
+namespace GrabberLimits {
+  double const G_ONE_UPPER = 0;
+  double const G_ONE_LOWER = 0;
+  double const G_TWO_UPPER = 0;
+  double const G_TWO_LOWER = 0;
+  double const G_THREE_UPPER = 0;
+  double const G_THREE_LOWER = 0;
+} //namespace GrabberLimits
 
 enum class ExtensionPositions {
   EXT_U, //Upper
   EXT_L  //Lower
 };
-enum ExtensionLimits {
-  EXT_L_LOWER,
-  EXT_L_UPPER,
-  EXT_U_LOWER,
-  EXT_U_UPPER
-};
+namespace ExtensionLimits {
+  double const EXT_L_LOWER = 0;
+  double const EXT_L_UPPER = 0;
+  double const EXT_U_LOWER = 0;
+  double const EXT_U_UPPER = 0;
+} //namespace ExtensionLimits
 } //namespace Limits
 } //namespace Constants

@@ -75,16 +75,16 @@ class Arm {
 
   Mode MODE = Mode::DEBUG;
 
-  int UPPER_JOINT_LIMIT;
-  int LOWER_JOINT_LIMIT;
-  int UPPER_GRABBER_LIMIT;
-  int LOWER_GRABBER_LIMIT;
-  int UPPER_EXTENSION_LIMIT;
-  int LOWER_EXTENSION_LIMIT;
+  double UPPER_JOINT_LIMIT;
+  double LOWER_JOINT_LIMIT;
+  double UPPER_GRABBER_LIMIT;
+  double LOWER_GRABBER_LIMIT;
+  double UPPER_EXTENSION_LIMIT;
+  double LOWER_EXTENSION_LIMIT;
 
-  int armJointEncoderDistance;
-  int armExtensionEncoderDistance;
-  int armGrabberEncoderDistance;
+  double armJointEncoderDistance;
+  double armExtensionEncoderDistance;
+  double armGrabberEncoderDistance;
 
   int BPresses;
   Timer BButtonTimer; //Local only, no need for pointers. Timer is off by default.
@@ -96,5 +96,4 @@ class Arm {
   bool armMovingDown;
   bool armIsExtending;
   bool armIsRetracting;
-  Timer DebugTimer;
 };
