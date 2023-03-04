@@ -20,7 +20,7 @@ enum Controller {
  */
 enum MotorControllers {
     //= Arm
-    ARM_GRABBER_JOINT = 0,
+    ARM_GRABBER_JOINT = 5,
     ARM_EXTENSION = 45,
     ARM_JOINT = 7,
     //= Drivetrain
@@ -58,8 +58,8 @@ namespace Speeds {
 units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
 double const JOINT_UPWARDS_SPEED = -0.5;
 double const JOINT_DOWNWARDS_SPEED = 0.5;
-double const EXTEND_SPEED = 0.5;
-double const RETRACT_SPEED = -0.5;
+double const EXTEND_SPEED = 10.0;
+double const RETRACT_SPEED = -10.0;
 double const GRABBER_UPWARDS_SPEED = -0.5;
 double const GRABBER_DOWNWARDS_SPEED = 0.5;
 /* === DRIVETRAIN === */

@@ -258,15 +258,15 @@ void Arm::DebugArmExtension() {
   DebugArmExtend();
   DebugArmRetract();
 
-  // if ( armController->GetLeftTriggerAxis() > 0.0 ) {
+  if ( armController->GetLeftTriggerAxis() > 0.0 ) {
+    armGrabberJoint.Set(1.0);
+  }
+  else if ( armController->GetRightTriggerAxis() > 0.0 ) {
     armGrabberJoint.Set(-1.0);
-  // }
-  // else if ( armController->GetRightTriggerAxis() > 0.0 ) {
-    // armGrabberJoint.Set(-1.0);
-  // }
-  // else {
-    // armGrabberJoint.Set(0.0);
-  // }
+  }
+  else {
+    armGrabberJoint.Set(0.0);
+  }
 
   if ( armController->GetRightStickButtonPressed() ) {
     armJointEncoder.Reset();
