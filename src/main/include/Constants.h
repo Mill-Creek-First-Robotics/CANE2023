@@ -20,14 +20,14 @@ enum Controller {
  */
 enum MotorControllers {
     //= Arm
-    ARM_GRABBER_JOINT = 7,
+    ARM_GRABBER_JOINT = 0,
     ARM_EXTENSION = 45,
-    ARM_JOINT = 0,
+    ARM_JOINT = 7,
     //= Drivetrain
-    BACK_RIGHT = 1,
-    FRONT_RIGHT,
+    BACK_RIGHT = 2,
+    FRONT_RIGHT = 1,
     BACK_LEFT = 13,
-    FRONT_LEFT,
+    FRONT_LEFT = 12,
 };
 
 /**
