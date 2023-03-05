@@ -66,8 +66,7 @@ void Arm::ArmUpdate() {
     HandleExtensionInput();
   }
   else if ( MODE == Mode::DEBUG ) {
-    DebugArmExtension();
-    DebugArmJoint();
+    DebugArm();
   }
   HandleGrabberPneumatics();
  /* --=[ END ]=-- */
@@ -208,7 +207,7 @@ void Arm::AutoRetractArm() {
   }
 }
 
-/* --=========[ DEBUG FUNCTIONS ]========-- */
+/* --=========#[ DEBUG FUNCTIONS ]#========-- */
 /**
  * To watch variables do:
  * Ctrl + P
@@ -216,36 +215,46 @@ void Arm::AutoRetractArm() {
  * hit enter
  * under watch dropdown, hit the + and type in variable name
 */
-void Arm::DebugArmJoint() {
-  //Watchers didn't work last time, added timer back in.
+void Arm::DebugArm() {
+  //Print values to SmartDashboard
   SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
   SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
   SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
- /* --=[ ARM JOINT ]=-- */
-  // === LOOP CONDITIONS ===
+
+  //Call DebugFunctions
+  DebugArmJoint();
+  DebugArmExtension();
+  DebugArmGrabber();
+
+  //Reset Encoders
+  if ( armController->GetRightStickButtonPressed() ) {
+    armJointEncoder.Reset();
+    armGrabberEncoder.Reset();
+    armExtensionEncoder.Reset();
+  }
+}
+
+void Arm::DebugArmJoint() {
   if (armController->GetRightBumperPressed()) armMovingUp = true;
   if (armController->GetRightBumperReleased()) armMovingUp = false;
 
   if (armController->GetLeftBumperPressed()) armMovingDown = true;
   if (armController->GetLeftBumperReleased()) armMovingDown = false;
-  //=== END LOOP CONDITIONS ===
-  //===== IF "LOOPS" =====
+
   //make sure that if both buttons are pressed, arm doesn't try to move both ways
   if (armMovingUp && !armMovingDown) {
-    armJoint.Set(-0.5);
+    armJoint.Set(Speeds::JOINT_UPWARDS_SPEED);
   }
   else if (!armMovingDown) { //arm isn't currently trying to move back
     armJoint.Set(0.0);
   }
 
   if (armMovingDown && !armMovingUp) {
-    armJoint.Set(0.5);
+    armJoint.Set(Speeds::JOINT_DOWNWARDS_SPEED);
   }
   else if (!armMovingUp) {
     armJoint.Set(0.0);
   }
-  //===== END IF "LOOPS" =====
- /* --=[ END ]=-- */
 }
 
 void Arm::DebugArmExtension() {
@@ -255,27 +264,13 @@ void Arm::DebugArmExtension() {
   if (armController->GetYButtonPressed()) armIsRetracting = true;
   if (armController->GetYButtonReleased()) armIsRetracting = false;
 
-  DebugArmExtend();
-  DebugArmRetract();
-
-  if ( armController->GetLeftTriggerAxis() > 0.0 ) {
-    armGrabberJoint.Set(1.0);
+  if(armIsRetracting && !armIsExtending) {
+    armExtension.Set(Speeds::RETRACT_SPEED);
   }
-  else if ( armController->GetRightTriggerAxis() > 0.0 ) {
-    armGrabberJoint.Set(-1.0);
-  }
-  else {
-    armGrabberJoint.Set(0.0);
+  else if (!armIsExtending) {
+    armExtension.Set(0.0);
   }
 
-  if ( armController->GetRightStickButtonPressed() ) {
-    armJointEncoder.Reset();
-    armGrabberEncoder.Reset();
-    armExtensionEncoder.Reset();
-  }
-}
-
-void Arm::DebugArmExtend() {
   if(armIsExtending && !armIsRetracting) {
     armExtension.Set(Speeds::EXTEND_SPEED);
   }
@@ -284,11 +279,14 @@ void Arm::DebugArmExtend() {
   }
 }
 
-void Arm::DebugArmRetract() {
-  if(armIsRetracting && !armIsExtending) {
-    armExtension.Set(Speeds::RETRACT_SPEED);
+void Arm::DebugArmGrabber() {
+  if ( armController->GetLeftTriggerAxis() > 0.0 ) {
+    armGrabberJoint.Set(Speeds::GRABBER_UPWARDS_SPEED);
   }
-  else if (!armIsExtending) {
-    armExtension.Set(0.0);
+  else if ( armController->GetRightTriggerAxis() > 0.0 ) {
+    armGrabberJoint.Set(Speeds::GRABBER_DOWNWARDS_SPEED);
   }
+  else {
+    armGrabberJoint.Set(0.0);
+  } 
 }

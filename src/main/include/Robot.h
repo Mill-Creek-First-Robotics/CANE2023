@@ -41,7 +41,8 @@ class Robot : public TimedRobot {
   string m_autoSelected = kAutoNameCustom;
   /* --=[###################]=-- */
   shared_ptr<XboxController> m_controller = make_shared<XboxController>(Constants::Controller::DRIVE_XBOX_CONTROLLER);
-  /* Here are the current Button Bindixngs:
+  /**
+   * Here are the current Button Bindixngs:
    * A = Toggle grabber (pneumatic piston)
    * B = Move to arm positions based on # of presses. Max three.
    * X = Toggle Arm extended/retracted

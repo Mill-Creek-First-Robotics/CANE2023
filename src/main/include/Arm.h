@@ -53,10 +53,10 @@ class Arm {
   void AutoRetractArm();
   //debug functions are for manually moving respective parts
   //useful for getting encoder values to set accurate limits
+  void DebugArm();
   void DebugArmJoint();         
   void DebugArmExtension();
-  void DebugArmExtend();
-  void DebugArmRetract();
+  void DebugArmGrabber();
 
   // Unit Testing
   WPI_TalonSRX *GetExtensionMotor() {
