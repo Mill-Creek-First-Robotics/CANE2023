@@ -1,14 +1,17 @@
 #pragma once
 
 #include "Constants.h"
+#include "Bindings.hpp"
 
 #include <memory>
 
+#include <frc/Counter.h>
 #include <frc/Timer.h>
 #include <units/time.h>
 #include <frc/Encoder.h>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/AnalogEncoder.h>
+#include <frc/filter/SlewRateLimiter.h>
 #include "ctre/Phoenix.h"
 #include <frc/Solenoid.h>
 #include <frc/Compressor.h>
@@ -16,22 +19,23 @@
 #include <frc/PneumaticsModuleType.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SendableChooser.h>
 
 using namespace frc;
 using namespace std;
 using namespace Constants;
 using namespace Constants::Limits;
 
-enum class Mode {
-  DEBUG,
-  NORMAL
+enum class ArmMode {
+  NORMAL,
+  MANUAL
 };
 
 class Arm {
  public:
-  Arm(shared_ptr<XboxController>& controller);
+  Arm();
   void SetJointAndGrabberLimits(JointPositions pos);
-  void SetExtensionLimits(ExtensionPositions pos);
+  // void SetExtensionLimits(ExtensionPositions pos);
   void MoveWithinLimits (
     WPI_TalonSRX* motor,
     int distance,
@@ -46,7 +50,10 @@ class Arm {
   void MoveGrabber();
   void HandleGrabberPneumatics();
   void HandleJointInput();
-  void HandleExtensionInput();
+  //// void HandleExtensionInput();
+
+  void UpdateSelection();
+  void UpdateBindings();
   
   void AutoMoveArmToPosition(JointPositions pos);
   void AutoExtendArm();
@@ -54,26 +61,41 @@ class Arm {
   //debug functions are for manually moving respective parts
   //useful for getting encoder values to set accurate limits
   void DebugArm();
-  void DebugArmJoint();         
-  void DebugArmExtension();
-  void DebugArmGrabber();
+  void ManualArmJoint();         
+  void ManualArmExtension();
+  void ManualArmGrabber();
 
   // Unit Testing
   WPI_TalonSRX *GetExtensionMotor() {
     return &armExtension;
   }
  private:
-  shared_ptr<XboxController> armController;
+  SendableChooser<string> chooser;
+  string const defaultArm = "Default";
+  string const drivers[4] = {
+    "Bobby",
+    "Calen",
+    "Orren",
+    "Landon"
+  };
+  string currentDriver = defaultArm; //selected
+  Bindings bindings;
+
+  // shared_ptr<XboxController> armController;
+  // XboxController armController;
   WPI_TalonSRX armJoint{MotorControllers::ARM_JOINT};
   WPI_TalonSRX armGrabberJoint{MotorControllers::ARM_GRABBER_JOINT};
   WPI_TalonSRX armExtension{MotorControllers::ARM_EXTENSION};
   Encoder armJointEncoder{Encoders::JOINT_ENCODER_ACHANNEL, Encoders::JOINT_ENCODER_BCHANNEL};
   Encoder armExtensionEncoder{Encoders::EXTEND_ENCODER_ACHANNEL, Encoders::EXTEND_ENCODER_BCHANNEL};
-  AnalogEncoder armGrabberEncoder{Encoders::GRABBER_ENCODER};
+  //Counter armGrabberEncoder{Encoders::GRABBER_ENCODER};
+  // Counter armGrabberEncoder{Counter::Mode::kTwoPulse};
+  // Counter armGrabberEncoder{Counter::Mode::kPulseLength};
+  Counter armGrabberEncoder{};
   Solenoid armGrabberPiston{PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID};
   Compressor compressor{COMPRESSOR, PneumaticsModuleType::CTREPCM};
 
-  Mode MODE = Mode::DEBUG;
+  ArmMode MODE = ArmMode::NORMAL;
 
   double UPPER_JOINT_LIMIT;
   double LOWER_JOINT_LIMIT;
@@ -84,10 +106,11 @@ class Arm {
 
   double armJointEncoderDistance;
   double armExtensionEncoderDistance;
-  double armGrabberEncoderDistance;
+  int armGrabberEncoderDistance;
+  int armGrabberPosition;
 
-  int BPresses;
-  Timer BButtonTimer; //Local only, no need for pointers. Timer is off by default.
+  // int BPresses;
+  // Timer BButtonTimer; //Local only, no need for pointers. Timer is off by default.
 
   bool armExtensionToggle;
 

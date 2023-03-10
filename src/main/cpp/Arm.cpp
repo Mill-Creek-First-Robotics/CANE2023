@@ -2,18 +2,38 @@
 
 #include <iostream>
 
-Arm::Arm(shared_ptr<XboxController>& controller) : armController(controller) {
+// Arm::Arm() {
+Arm::Arm() {
   //All encoders assume initial position is 0.
   //Therefore, arm must be all the way down and fully retracted at start.
   armJointEncoder.Reset();
-  armGrabberEncoder.Reset();
   armExtensionEncoder.Reset();
-  armGrabberEncoder.SetDistancePerRotation(4.0);
+  armGrabberEncoder.Reset();
+
+  // armGrabberEncoder.SetDownSourceEdge(true,true);
+  armGrabberEncoder.SetUpSource(Encoders::GRABBER_ENCODER);
+  //// ^
   
+  armGrabberEncoder.SetUpSourceEdge(true,true);  
+
+  armGrabberEncoder.SetUpDownCounterMode();
+  // armGrabberEncoder.SetDistancePerPulse(500./256.);
+
   SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
-  SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
+  // SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
   compressor.Disable();
   compressor.EnableDigital();
+
+  chooser.SetDefaultOption(defaultArm, defaultArm);
+  for ( string driver : drivers ) {
+    chooser.AddOption(driver, driver);
+  }
+  SmartDashboard::PutData("Who is controlling the Arm: ", &chooser);
+}
+
+void Arm::UpdateSelection() {
+  currentDriver = chooser.GetSelected();
+  bindings.SetCurrentDriver(currentDriver);
 }
 
 void Arm::SetJointAndGrabberLimits(JointPositions pos) {
@@ -37,62 +57,73 @@ void Arm::SetJointAndGrabberLimits(JointPositions pos) {
     LOWER_GRABBER_LIMIT = GrabberLimits::G_THREE_LOWER;
   }
 }
-void Arm::SetExtensionLimits(ExtensionPositions pos) {
-  switch(pos) {
-  case ExtensionPositions::EXT_U:
-    UPPER_EXTENSION_LIMIT = ExtensionLimits::EXT_U_UPPER;
-    LOWER_EXTENSION_LIMIT = ExtensionLimits::EXT_U_LOWER;
-    break;
-  case ExtensionPositions::EXT_L:
-    UPPER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_UPPER;
-    LOWER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_LOWER;
-  }
-}
+// void Arm::SetExtensionLimits(ExtensionPositions pos) {
+//   switch(pos) {
+//   case ExtensionPositions::EXT_U:
+//     UPPER_EXTENSION_LIMIT = ExtensionLimits::EXT_U_UPPER;
+//     LOWER_EXTENSION_LIMIT = ExtensionLimits::EXT_U_LOWER;
+//     break;
+//   case ExtensionPositions::EXT_L:
+//     UPPER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_UPPER;
+//     LOWER_EXTENSION_LIMIT = ExtensionLimits::EXT_L_LOWER;
+//   }
+// }
 
 void Arm::ArmUpdate() {
+  bindings.UpdateConditions();
  /* --=[ UPDATE VARIABLES]=-- */
-  armGrabberEncoderDistance = armGrabberEncoder.GetDistance();
-  armJointEncoderDistance = armJointEncoder.GetDistance();
+  armGrabberEncoderDistance = armGrabberEncoder.Get();
+  //convert to position
+  if (armGrabberJoint.GetMotorOutputPercent() > 0.0) {
+    armGrabberPosition += armGrabberEncoderDistance;
+  }
+  else {
+    armGrabberPosition -= armGrabberEncoderDistance;
+  }
+  //reset the count
+  armGrabberEncoder.Reset();
+  armJointEncoderDistance = -armJointEncoder.GetDistance();
   armExtensionEncoderDistance = armExtensionEncoder.GetDistance();
  /* --=[ END ]=-- */
-  if ( armController->GetLeftStickButtonPressed() ) {
-    if ( MODE == Mode::DEBUG ) MODE = Mode::NORMAL;
-    else MODE = Mode::DEBUG;
+  if ( bindings.GetArmModeToggle() ) {
+    MODE == ArmMode::MANUAL ? MODE = ArmMode::NORMAL : MODE = ArmMode::MANUAL;
   }
  /* --=[ FUNCTION CALLS ]=-- */
-  if ( MODE == Mode::NORMAL ) {
-    HandleJointInput();
-    MoveGrabber();
-    HandleExtensionInput();
+  if ( MODE == ArmMode::NORMAL ) {
+    // HandleJointInput();
+    // MoveGrabber();
+    //// HandleExtensionInput();
   }
-  else if ( MODE == Mode::DEBUG ) {
-    DebugArm();
+  else if ( MODE == ArmMode::MANUAL ) {
+    ManualArmJoint();
+    ManualArmGrabber();
+    ManualArmExtension();
   }
   HandleGrabberPneumatics();
  /* --=[ END ]=-- */
 }
 
-void Arm::HandleExtensionInput() {
-  if ( armController->GetXButtonPressed() ) {
-    armExtensionToggle = !armExtensionToggle;
-    armExtensionToggle ? SetExtensionLimits(ExtensionPositions::EXT_U)  //T
-    : SetExtensionLimits(ExtensionPositions::EXT_L);                    //F
-  }
-  MoveArmExtension();
-}
-void Arm::MoveArmExtension() {
-  MoveWithinLimits ( //deref, pass by value. @see: MoveWithinLimits()
-    &armExtension,
-    armExtensionEncoderDistance,
-    Speeds::EXTEND_SPEED,
-    Speeds::RETRACT_SPEED,
-    UPPER_EXTENSION_LIMIT,
-    LOWER_EXTENSION_LIMIT
-  );
-}
+// void Arm::HandleExtensionInput() {
+//   if ( bi ) {
+//     armExtensionToggle = !armExtensionToggle;
+//     armExtensionToggle ? SetExtensionLimits(ExtensionPositions::EXT_U)  //T
+//     : SetExtensionLimits(ExtensionPositions::EXT_L);                    //F
+//   }
+//   MoveArmExtension();
+// }
+// void Arm::MoveArmExtension() {
+//   MoveWithinLimits (
+//     &armExtension,
+//     armExtensionEncoderDistance,
+//     Speeds::EXTEND_SPEED,
+//     Speeds::RETRACT_SPEED,
+//     UPPER_EXTENSION_LIMIT,
+//     LOWER_EXTENSION_LIMIT
+//   );
+// }
 
 void Arm::HandleGrabberPneumatics() {
-  if ( armController->GetAButtonPressed() ) {
+  if ( bindings.GetGrabberToggle() ) {
     armGrabberPiston.Toggle();
   }
 }
@@ -109,32 +140,15 @@ void Arm::MoveGrabber() {
 }
 
 void Arm::HandleJointInput() {
-  if ( armController->GetBButtonPressed() ) {
-    BPresses++;
+  if ( bindings.GetObjectPickup() ) {
+    SetJointAndGrabberLimits(JointPositions::POS1);
   }
-  if ( armController->GetBButtonReleased() ) {
-    //Start timer for multiple button presses when the first button is released.
-    //needs if statement so that a button held from previous interval
-    //doesn't start next interval w/out increasing b
-    if (BPresses > 0) BButtonTimer.Start(); //does nothing when called again & the timer is already running.
+  if ( bindings.GetObjectDropoffMid() ) {
+    SetJointAndGrabberLimits(JointPositions::POS2);
   }
-  //runs once a second has passed since the timer was started
-  if ( BButtonTimer.HasElapsed(Speeds::BBUTTON_CHECK_INTERVAL) ) {
-    switch(BPresses) { //Match # of button presses, setting joint limits respectively.
-    case 1:
-      SetJointAndGrabberLimits(JointPositions::POS1);
-      break;
-    case 2:
-      SetJointAndGrabberLimits(JointPositions::POS2);
-      break;
-    case 3:
-      SetJointAndGrabberLimits(JointPositions::POS3);
-    }
-    BPresses = 0;
-    BButtonTimer.Reset(); //set time = 0
-    BButtonTimer.Stop();  //stop timer
+  if ( bindings.GetObjectDropoffHigh() ) {
+    SetJointAndGrabberLimits(JointPositions::POS3);
   }
-
   MoveArmJoint();
 }
 
@@ -208,85 +222,60 @@ void Arm::AutoRetractArm() {
 }
 
 /* --=========#[ DEBUG FUNCTIONS ]#========-- */
-/**
- * To watch variables do:
- * Ctrl + P
- * type "view watch"
- * hit enter
- * under watch dropdown, hit the + and type in variable name
-*/
 void Arm::DebugArm() {
   //Print values to SmartDashboard
   SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
   SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
+  SmartDashboard::PutNumber("GrabberPos: ",armGrabberPosition);
   SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
+  SmartDashboard::PutNumber("Count: ",armGrabberEncoder.Get());
 
-  //Call DebugFunctions
-  DebugArmJoint();
-  DebugArmExtension();
-  DebugArmGrabber();
+  //Call Debug/Manual Functions
+  ManualArmJoint();
+  ManualArmExtension();
+  ManualArmGrabber();
 
   //Reset Encoders
-  if ( armController->GetRightStickButtonPressed() ) {
+  if ( bindings.GetArmModeToggle() ) {
     armJointEncoder.Reset();
     armGrabberEncoder.Reset();
     armExtensionEncoder.Reset();
   }
 }
 
-void Arm::DebugArmJoint() {
-  if (armController->GetRightBumperPressed()) armMovingUp = true;
-  if (armController->GetRightBumperReleased()) armMovingUp = false;
-
-  if (armController->GetLeftBumperPressed()) armMovingDown = true;
-  if (armController->GetLeftBumperReleased()) armMovingDown = false;
-
-  //make sure that if both buttons are pressed, arm doesn't try to move both ways
-  if (armMovingUp && !armMovingDown) {
+//TODO: Make these simpler with functions to avoid repeating
+void Arm::ManualArmJoint() {
+  if (bindings.GetJointUp()) {
     armJoint.Set(Speeds::JOINT_UPWARDS_SPEED);
   }
-  else if (!armMovingDown) { //arm isn't currently trying to move back
-    armJoint.Set(0.0);
-  }
-
-  if (armMovingDown && !armMovingUp) {
+  else if (bindings.GetJointDown()) {
     armJoint.Set(Speeds::JOINT_DOWNWARDS_SPEED);
   }
-  else if (!armMovingUp) {
+  else if (bindings.GetJointUpReleased() || bindings.GetJointDownReleased()) {
     armJoint.Set(0.0);
   }
 }
 
-void Arm::DebugArmExtension() {
-  if (armController->GetXButtonPressed()) armIsExtending = true;
-  if (armController->GetXButtonReleased()) armIsExtending = false;
-
-  if (armController->GetYButtonPressed()) armIsRetracting = true;
-  if (armController->GetYButtonReleased()) armIsRetracting = false;
-
-  if(armIsRetracting && !armIsExtending) {
-    armExtension.Set(Speeds::RETRACT_SPEED);
-  }
-  else if (!armIsExtending) {
-    armExtension.Set(0.0);
-  }
-
-  if(armIsExtending && !armIsRetracting) {
+void Arm::ManualArmExtension() {
+  if (bindings.GetArmExtend()) {
     armExtension.Set(Speeds::EXTEND_SPEED);
   }
-  else if (!armIsRetracting) {
+  if (bindings.GetArmRetract()) {
+    armExtension.Set(Speeds::RETRACT_SPEED);
+  }
+  else if (bindings.GetArmRetractReleased() || bindings.GetArmExtendReleased()) {
     armExtension.Set(0.0);
   }
 }
 
-void Arm::DebugArmGrabber() {
-  if ( armController->GetLeftTriggerAxis() > 0.0 ) {
+void Arm::ManualArmGrabber() {
+  if ( bindings.GetGrabberUp() ) {
     armGrabberJoint.Set(Speeds::GRABBER_UPWARDS_SPEED);
   }
-  else if ( armController->GetRightTriggerAxis() > 0.0 ) {
+  else if ( bindings.GetGrabberDown() ) {
     armGrabberJoint.Set(Speeds::GRABBER_DOWNWARDS_SPEED);
   }
-  else {
+  else if ( bindings.GetGrabberUpReleased() || bindings.GetGrabberDownReleased() ) {
     armGrabberJoint.Set(0.0);
   } 
 }

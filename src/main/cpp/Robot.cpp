@@ -32,7 +32,7 @@ void Robot::AutonomousInit() {
   // fmt::print("Auto selected: {}\n", m_autoSelected);
 
   // if (m_autoSelected == kAutoNameCustom) {
-  //   // Custom Auto goes here
+  //   // Custom Auto goes her
   // } else {
   //   m_drive->TimerReset();
   // }
@@ -44,7 +44,11 @@ void Robot::AutonomousPeriodic() {
   }
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  //use chosen drivers on smartdashboard to bind buttons and determine driving style.
+  m_drive.UpdateSelection();
+  m_arm.UpdateSelection();
+}
 
 void Robot::TeleopPeriodic() {
   m_drive.TuxDrive();
@@ -54,8 +58,14 @@ void Robot::TeleopPeriodic() {
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
 
-void Robot::TestInit() {}
-void Robot::TestPeriodic() {}
+void Robot::TestInit() {
+  m_drive.UpdateSelection();
+  m_arm.UpdateSelection();
+}
+void Robot::TestPeriodic() {
+  m_drive.TuxDrive();
+  m_arm.DebugArm();
+}
 
 void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}

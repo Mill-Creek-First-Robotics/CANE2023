@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Constants.h"
+#include "Bindings.hpp"
 
 #include <memory>
 #include <stdexcept>
@@ -11,24 +12,46 @@
 
 #include <frc/Timer.h>
 #include <units/time.h>
+#include <units/dimensionless.h>
+#include <units/acceleration.h>
 #include <frc/XboxController.h>
 #include <frc/motorcontrol/Spark.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/motorcontrol/MotorControllerGroup.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SendableChooser.h>
 
 using namespace frc;
 using namespace std;
 
+enum class DriveMode {
+  NORMAL,
+  PRECISION
+};
+
 class Drive {
  public:
- 
-  Drive(shared_ptr<XboxController>& controller); //Constructor
+  Drive();
   void TuxDrive(); //Actual driving
   void Autonomous();
-
+  void UpdateSelection();
+  void UpdateBindings();
  private:
+  SendableChooser<string> chooser;
+  string const styleDefault = "Default";
+  /* --=#[ DRIVERS ]#=-- ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  string const drivers[4] = {
+    "Bobby",
+    "Calen",
+    "Orren",
+    "Landon"
+  };
+  string currentDriver = styleDefault; //selected
+  /* --=#[ END ]#=-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-  shared_ptr<XboxController> m_controller;
+  DriveMode mode = DriveMode::NORMAL;
+  Bindings bindings;
+
   WPI_TalonSRX m_frontLeft{Constants::MotorControllers::FRONT_LEFT};
   WPI_TalonSRX m_backLeft{Constants::MotorControllers::BACK_LEFT};
   MotorControllerGroup m_left{m_frontLeft, m_backLeft};
@@ -39,7 +62,6 @@ class Drive {
 
   DifferentialDrive m_drive{m_left,m_right};
 
- 
   //AHRS m_gyro{SPI::Port::kMXP};
 
   Timer m_timer;

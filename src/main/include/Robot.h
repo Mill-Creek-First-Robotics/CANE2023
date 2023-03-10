@@ -34,21 +34,10 @@ class Robot : public TimedRobot {
   void SimulationPeriodic() override;
 
  private:
-  /* --=[ DEFAULT VARIABLES ]=-- */
   SendableChooser<string> m_chooser;
   string const kAutoNameDefault = "Default";
   string const kAutoNameCustom = "My Auto";
   string m_autoSelected = kAutoNameCustom;
-  /* --=[###################]=-- */
-  shared_ptr<XboxController> m_controller = make_shared<XboxController>(Constants::Controller::DRIVE_XBOX_CONTROLLER);
-  /**
-   * Here are the current Button Bindixngs:
-   * A = Toggle grabber (pneumatic piston)
-   * B = Move to arm positions based on # of presses. Max three.
-   * X = Toggle Arm extended/retracted
-   * Left Joystick Y-Axis = Move robot forwards/backwards
-   * Right Joystick X-Axis = Rotate robot left/right
-   */
-  Arm m_arm{m_controller};
-  Drive m_drive{m_controller};
+  Arm m_arm{};
+  Drive m_drive{};
 };

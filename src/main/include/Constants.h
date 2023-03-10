@@ -35,11 +35,11 @@ enum MotorControllers {
  * @note: GRABBER_ENCODER is an AnalogEncoder which only needs 1 argument, the DIO port. 
  */
 namespace Encoders {
-int const GRABBER_ENCODER = 0;
-int const JOINT_ENCODER_ACHANNEL = 3;
-int const JOINT_ENCODER_BCHANNEL = 4;
-int const EXTEND_ENCODER_ACHANNEL = 1;
-int const EXTEND_ENCODER_BCHANNEL = 2;
+  int const GRABBER_ENCODER = 5;
+  int const JOINT_ENCODER_ACHANNEL = 3;
+  int const JOINT_ENCODER_BCHANNEL = 4;
+  int const EXTEND_ENCODER_ACHANNEL = 1;
+  int const EXTEND_ENCODER_BCHANNEL = 2;
 } //namespace Encoders
 
 /**
@@ -54,16 +54,16 @@ enum Solenoids {
  * Speeds is a namespace because enums can't have double values
  */
 namespace Speeds {
-/* === ARM === */
-units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
-double const JOINT_UPWARDS_SPEED = -0.5;
-double const JOINT_DOWNWARDS_SPEED = 0.5;
-double const EXTEND_SPEED = 10.0;
-double const RETRACT_SPEED = -10.0;
-double const GRABBER_UPWARDS_SPEED = -0.5;
-double const GRABBER_DOWNWARDS_SPEED = 0.5;
-/* === DRIVETRAIN === */
-double const AUTO_SPEED = 0.5;
+  /* === ARM === */
+  units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
+  double const JOINT_UPWARDS_SPEED = -0.5;
+  double const JOINT_DOWNWARDS_SPEED = 0.5;
+  double const EXTEND_SPEED = -10.0;
+  double const RETRACT_SPEED = 10.0;
+  double const GRABBER_UPWARDS_SPEED = 1.0;
+  double const GRABBER_DOWNWARDS_SPEED = -1.0;
+  /* === DRIVETRAIN === */
+  double const AUTO_SPEED = 0.5;
 } //namespace Speeds
 
 //Limits for the arm positions
