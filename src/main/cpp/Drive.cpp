@@ -7,25 +7,26 @@ Drive::Drive(shared_ptr<XboxController>& controller) : m_controller(controller) 
 }
 
 void Drive::TuxDrive() {
-  m_drive.ArcadeDrive(m_controller->GetLeftY(),m_controller->GetRightX() * 0.6);
+  if (m_controller->GetLeftStickButtonPressed()) {
+    mode == DriveMode::NORMAL ? mode = DriveMode::SLOW : mode = DriveMode::NORMAL;
+  }
+  double leftY = m_controller->GetLeftY();
+  double rightX = m_controller->GetRightX();
+  if (mode == DriveMode::SLOW) {
+    leftY /= 2;
+    rightX /= 2;
+  }
+  m_drive.ArcadeDrive(leftY,rightX);
 }
 
 void Drive::Autonomous() {
-   
-    if (m_timer.Get() < 2_s) {
-      
-      m_drive.ArcadeDrive(-0.5, 0.0, false);
-    } else {
-      
-      m_drive.ArcadeDrive(0.0, 0.0, false);
-    }
-  
-
-    if (m_timer.Get() < 4_s && m_timer.Get() > 2_s) {
-      
-      m_drive.ArcadeDrive(0.5, 0.0, false);
-    } else {
-      
-      m_drive.ArcadeDrive(0.0, 0.0, false);
-    }
+  if (m_timer.Get() < 2_s) { 
+    m_drive.ArcadeDrive(-0.5, 0.0, false);
   }
+
+  if (m_timer.Get() < 4_s && m_timer.Get() > 2_s) {
+    m_drive.ArcadeDrive(0.5, 0.0, false);
+  } else if (m_timer.Get() > 4_s) {
+    m_drive.ArcadeDrive(0.0, 0.0, false);
+  }
+}

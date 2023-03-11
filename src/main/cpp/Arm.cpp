@@ -55,10 +55,10 @@ void Arm::ArmUpdate() {
   armJointEncoderDistance = armJointEncoder.GetDistance();
   armExtensionEncoderDistance = armExtensionEncoder.GetDistance();
  /* --=[ END ]=-- */
-  if ( armController->GetLeftStickButtonPressed() ) {
-    if ( MODE == Mode::DEBUG ) MODE = Mode::NORMAL;
-    else MODE = Mode::DEBUG;
-  }
+  // if ( armController->GetLeftStickButtonPressed() ) {
+  //   if ( MODE == Mode::DEBUG ) MODE = Mode::NORMAL;
+  //   else MODE = Mode::DEBUG;
+  // }
  /* --=[ FUNCTION CALLS ]=-- */
   if ( MODE == Mode::NORMAL ) {
     HandleJointInput();

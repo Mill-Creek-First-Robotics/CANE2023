@@ -19,6 +19,11 @@
 using namespace frc;
 using namespace std;
 
+enum class DriveMode {
+  NORMAL,
+  SLOW
+};
+
 class Drive {
  public:
  
@@ -28,6 +33,7 @@ class Drive {
 
  private:
 
+  DriveMode mode = DriveMode::NORMAL;
   shared_ptr<XboxController> m_controller;
   WPI_TalonSRX m_frontLeft{Constants::MotorControllers::FRONT_LEFT};
   WPI_TalonSRX m_backLeft{Constants::MotorControllers::BACK_LEFT};
