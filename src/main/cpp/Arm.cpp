@@ -87,7 +87,7 @@ void Arm::ArmUpdate() {
   else {
     armGrabberPosition -= armGrabberEncoderDistance;
   }
-  armJoint.Set(-0.1);
+  armJoint.Set(-0.4);
   //reset the count
   armGrabberEncoder.Reset();
   armJointEncoderDistance = -armJointEncoder.GetDistance();
@@ -97,7 +97,7 @@ void Arm::ArmUpdate() {
   //   MODE == ArmMode::MANUAL ? MODE = ArmMode::NORMAL : MODE = ArmMode::MANUAL;
   // }
  /* --=[ FUNCTION CALLS ]=-- */
-    ManualArmJoint();
+    // ManualArmJoint();
     ManualArmGrabber();
     ManualArmExtension();
   HandleGrabberPneumatics();
