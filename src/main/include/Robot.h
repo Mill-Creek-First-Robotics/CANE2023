@@ -8,7 +8,7 @@
 
 #include <string>
 #include <memory>
-
+#include <frc/Timer.h>
 #include <fmt/core.h>
 #include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
@@ -51,4 +51,5 @@ class Robot : public TimedRobot {
    */
   Arm m_arm{m_controller};
   Drive m_drive{m_controller};
+  Timer m_timer{};
 };

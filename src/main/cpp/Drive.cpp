@@ -11,5 +11,21 @@ void Drive::TuxDrive() {
 }
 
 void Drive::Autonomous() {
+   
+    if (m_timer.Get() < 2_s) {
+      
+      m_drive.ArcadeDrive(-0.5, 0.0, false);
+    } else {
+      
+      m_drive.ArcadeDrive(0.0, 0.0, false);
+    }
   
-}
+
+    if (m_timer.Get() < 4_s && m_timer.Get() > 2_s) {
+      
+      m_drive.ArcadeDrive(0.5, 0.0, false);
+    } else {
+      
+      m_drive.ArcadeDrive(0.0, 0.0, false);
+    }
+  }
