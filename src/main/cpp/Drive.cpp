@@ -34,7 +34,7 @@ void Drive::TuxDrive() {
     m_drive.TankDrive(leftY, rightY);
   }
   else if ( currentDriver == "Orren" ) {
-    m_drive.ArcadeDrive(leftY, rightX);
+    m_drive.ArcadeDrive(leftY, rightX * 0.4);
   }
 }
 

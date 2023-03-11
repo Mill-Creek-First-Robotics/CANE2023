@@ -31,6 +31,14 @@ Arm::Arm() {
   SmartDashboard::PutData("Who is controlling the Arm: ", &chooser);
 }
 
+void Arm::PutToSmartDashboard() {
+  SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
+  SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
+  SmartDashboard::PutNumber("GrabberPos: ",armGrabberPosition);
+  SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
+  SmartDashboard::PutNumber("Count: ",armGrabberEncoder.Get());
+}
+
 void Arm::UpdateSelection() {
   currentDriver = chooser.GetSelected();
   bindings.SetCurrentDriver(currentDriver);
@@ -71,6 +79,7 @@ void Arm::SetJointAndGrabberLimits(JointPositions pos) {
 
 void Arm::ArmUpdate() {
   bindings.UpdateConditions();
+  PutToSmartDashboard();
  /* --=[ UPDATE VARIABLES]=-- */
   armGrabberEncoderDistance = armGrabberEncoder.Get();
   //convert to position
@@ -85,9 +94,9 @@ void Arm::ArmUpdate() {
   armJointEncoderDistance = -armJointEncoder.GetDistance();
   armExtensionEncoderDistance = armExtensionEncoder.GetDistance();
  /* --=[ END ]=-- */
-  if ( bindings.GetArmModeToggle() ) {
-    MODE == ArmMode::MANUAL ? MODE = ArmMode::NORMAL : MODE = ArmMode::MANUAL;
-  }
+  // if ( bindings.GetArmModeToggle() ) {
+  //   MODE == ArmMode::MANUAL ? MODE = ArmMode::NORMAL : MODE = ArmMode::MANUAL;
+  // }
  /* --=[ FUNCTION CALLS ]=-- */
   if ( MODE == ArmMode::NORMAL ) {
     // HandleJointInput();
@@ -223,13 +232,6 @@ void Arm::AutoRetractArm() {
 
 /* --=========#[ DEBUG FUNCTIONS ]#========-- */
 void Arm::DebugArm() {
-  //Print values to SmartDashboard
-  SmartDashboard::PutNumber("Joint: ",armJointEncoderDistance);
-  SmartDashboard::PutNumber("Grabber: ",armGrabberEncoderDistance);
-  SmartDashboard::PutNumber("GrabberPos: ",armGrabberPosition);
-  SmartDashboard::PutNumber("Extension: ",armExtensionEncoderDistance);
-  SmartDashboard::PutNumber("Count: ",armGrabberEncoder.Get());
-
   //Call Debug/Manual Functions
   ManualArmJoint();
   ManualArmExtension();
@@ -245,37 +247,73 @@ void Arm::DebugArm() {
 
 //TODO: Make these simpler with functions to avoid repeating
 void Arm::ManualArmJoint() {
-  if (bindings.GetJointUp()) {
-    armJoint.Set(Speeds::JOINT_UPWARDS_SPEED);
-  }
-  else if (bindings.GetJointDown()) {
-    armJoint.Set(Speeds::JOINT_DOWNWARDS_SPEED);
-  }
-  else if (bindings.GetJointUpReleased() || bindings.GetJointDownReleased()) {
-    armJoint.Set(0.0);
-  }
+  NotGravity(
+    &armJoint,
+    bindings.GetJointUp(),
+    bindings.GetJointUpReleased(),
+    bindings.GetJointDown(),
+    bindings.GetJointDownReleased(),
+    &jointMovingUp,
+    &jointMovingDown,
+    Speeds::JOINT_UPWARDS_SPEED,
+    Speeds::JOINT_DOWNWARDS_SPEED
+  );
 }
 
 void Arm::ManualArmExtension() {
-  if (bindings.GetArmExtend()) {
-    armExtension.Set(Speeds::EXTEND_SPEED);
-  }
-  if (bindings.GetArmRetract()) {
-    armExtension.Set(Speeds::RETRACT_SPEED);
-  }
-  else if (bindings.GetArmRetractReleased() || bindings.GetArmExtendReleased()) {
-    armExtension.Set(0.0);
-  }
+  NotGravity(
+    &armExtension,
+    bindings.GetArmExtend(),
+    bindings.GetArmExtendReleased(),
+    bindings.GetArmRetract(),
+    bindings.GetArmRetractReleased(),
+    &extensionMovingUp,
+    &extensionMovingDown,
+    Speeds::EXTEND_SPEED,
+    Speeds::RETRACT_SPEED
+  );
 }
 
 void Arm::ManualArmGrabber() {
-  if ( bindings.GetGrabberUp() ) {
-    armGrabberJoint.Set(Speeds::GRABBER_UPWARDS_SPEED);
+  NotGravity(
+    &armGrabberJoint,
+    bindings.GetGrabberUp(),
+    bindings.GetGrabberUpReleased(),
+    bindings.GetGrabberDown(),
+    bindings.GetGrabberDownReleased(),
+    &grabberMovingUp,
+    &grabberMovingDown,
+    Speeds::GRABBER_UPWARDS_SPEED,
+    Speeds::GRABBER_DOWNWARDS_SPEED
+  );
+}
+
+void Arm::NotGravity(WPI_TalonSRX* motor,
+  bool upCondition, bool upReleaseCondition,
+  bool downCondition, bool downReleaseCondition,
+  bool* movingUp, bool* movingDown,
+  double upwardsSpeed, double downwardsSpeed ) {
+
+  if ( upCondition ) {
+    *movingUp = true;
+  } else if ( upReleaseCondition ) {
+    *movingUp = false;
   }
-  else if ( bindings.GetGrabberDown() ) {
-    armGrabberJoint.Set(Speeds::GRABBER_DOWNWARDS_SPEED);
+  if ( downCondition ) {
+    *movingDown = true;
+  } else if ( downReleaseCondition ) {
+    *movingDown = false;
   }
-  else if ( bindings.GetGrabberUpReleased() || bindings.GetGrabberDownReleased() ) {
-    armGrabberJoint.Set(0.0);
-  } 
+
+  if ( movingUp && !movingDown ) {
+    motor->Set(upwardsSpeed);
+  } else if ( !movingDown ) {
+    motor->Set(0.0);
+  }
+
+  if ( movingDown && !movingUp ) {
+    motor->Set(downwardsSpeed);
+  } else if ( !movingUp ) {
+    motor->Set(0.0);
+  }
 }

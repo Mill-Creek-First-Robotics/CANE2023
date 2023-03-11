@@ -12,7 +12,7 @@ int const COMPRESSOR = 0;
  */
 enum Controller {
   DRIVE_XBOX_CONTROLLER = 0,
-  ARM_XBOX_CONTROLLER
+  ARM_XBOX_CONTROLLER = 1
 };
 
 /**

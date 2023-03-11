@@ -51,7 +51,7 @@ class Arm {
   void HandleGrabberPneumatics();
   void HandleJointInput();
   //// void HandleExtensionInput();
-
+  void PutToSmartDashboard();
   void UpdateSelection();
   void UpdateBindings();
   
@@ -65,6 +65,12 @@ class Arm {
   void ManualArmExtension();
   void ManualArmGrabber();
 
+  void NotGravity (WPI_TalonSRX* motor,
+    bool upCondition, bool upReleaseCondition,
+    bool downCondition, bool downReleaseCondition,
+    bool* movingUp, bool* movingDown,
+    double upwardsSpeed, double downwardsSpeed
+  );
   // Unit Testing
   WPI_TalonSRX *GetExtensionMotor() {
     return &armExtension;
@@ -95,7 +101,7 @@ class Arm {
   Solenoid armGrabberPiston{PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID};
   Compressor compressor{COMPRESSOR, PneumaticsModuleType::CTREPCM};
 
-  ArmMode MODE = ArmMode::NORMAL;
+  ArmMode MODE = ArmMode::MANUAL;
 
   double UPPER_JOINT_LIMIT;
   double LOWER_JOINT_LIMIT;
@@ -119,4 +125,11 @@ class Arm {
   bool armMovingDown;
   bool armIsExtending;
   bool armIsRetracting;
+
+  bool jointMovingUp;
+  bool jointMovingDown;
+  bool grabberMovingUp;
+  bool grabberMovingDown;
+  bool extensionMovingUp;
+  bool extensionMovingDown;
 };
