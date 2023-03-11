@@ -39,7 +39,7 @@ void Drive::TuxDrive() {
 
   //determine drive style based on the current driver selected throuh SendableChooser
   if ( currentDriver == "Default" ) {
-    m_drive.TankDrive(leftY, rightY);
+    m_drive.ArcadeDrive(leftY, rightY);
   }
   else if ( currentDriver == "Orren" ) {
     m_drive.ArcadeDrive(leftY, rightX * 0.4);
@@ -51,7 +51,7 @@ void Drive::AutoSimple() {
     m_drive.ArcadeDrive(0.5,0.0);
   }
   if ( m_timer.Get() > 2_s && m_timer.Get() < 4_s) {
-    m_drive.ArcadeDrive(0.5,0.0);
+    m_drive.ArcadeDrive(-0.5,0.0);
   }
 }
 
