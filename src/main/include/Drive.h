@@ -27,14 +27,14 @@ enum class DriveMode {
 class Drive {
  public:
  
-  Drive(shared_ptr<XboxController>& controller); //Constructor
+  Drive(); //Constructor
   void TuxDrive(); //Actual driving
   void Autonomous();
 
  private:
 
   DriveMode mode = DriveMode::NORMAL;
-  shared_ptr<XboxController> m_controller;
+  XboxController m_controller{Constants::Controller::DRIVE_XBOX_CONTROLLER}; //Controller};
   WPI_TalonSRX m_frontLeft{Constants::MotorControllers::FRONT_LEFT};
   WPI_TalonSRX m_backLeft{Constants::MotorControllers::BACK_LEFT};
   MotorControllerGroup m_left{m_frontLeft, m_backLeft};

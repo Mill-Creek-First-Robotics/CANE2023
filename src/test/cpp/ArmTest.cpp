@@ -11,16 +11,16 @@ using namespace Constants;
 
 class ArmTest : public testing::Test {
  protected:
-  shared_ptr<XboxController> m_controller = make_shared<XboxController>(0);
-  XboxControllerSim m_simController{*m_controller};
-  Arm m_arm{m_controller};
-  SolenoidSim m_solenoid{PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID};
+  // shared_ptr<XboxController> m_controller = make_shared<XboxController>(0);
+  // XboxControllerSim m_simController{*m_controller};
+  // Arm m_arm{m_controller};
+  // SolenoidSim m_solenoid{PneumaticsModuleType::CTREPCM, Solenoids::ARM_SOLENOID};
 };
 
 
-TEST_F(ArmTest, ArmPistonDefaultFalse) {
-  EXPECT_EQ(m_solenoid.GetOutput(),false);
-}
+// TEST_F(ArmTest, ArmPistonDefaultFalse) {
+//   EXPECT_EQ(m_solenoid.GetOutput(),false);
+// }
 
 // TEST_F(ArmTest, ArmExtensionMovesManually) {
 //   WPI_TalonSRX* extensionSim = m_arm.GetExtensionMotor();

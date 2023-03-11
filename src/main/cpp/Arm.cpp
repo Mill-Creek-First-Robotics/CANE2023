@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Arm::Arm(shared_ptr<XboxController>& controller) : armController(controller) {
+Arm::Arm() {
   //All encoders assume initial position is 0.
   //Therefore, arm must be all the way down and fully retracted at start.
   armJointEncoder.Reset();
@@ -73,7 +73,7 @@ void Arm::ArmUpdate() {
 }
 
 void Arm::HandleExtensionInput() {
-  if ( armController->GetXButtonPressed() ) {
+  if ( armController.GetXButtonPressed() ) {
     armExtensionToggle = !armExtensionToggle;
     armExtensionToggle ? SetExtensionLimits(ExtensionPositions::EXT_U)  //T
     : SetExtensionLimits(ExtensionPositions::EXT_L);                    //F
@@ -92,7 +92,7 @@ void Arm::MoveArmExtension() {
 }
 
 void Arm::HandleGrabberPneumatics() {
-  if ( armController->GetAButtonPressed() ) {
+  if ( armController.GetAButtonPressed() ) {
     armGrabberPiston.Toggle();
   }
 }
@@ -109,10 +109,10 @@ void Arm::MoveGrabber() {
 }
 
 void Arm::HandleJointInput() {
-  if ( armController->GetBButtonPressed() ) {
+  if ( armController.GetBButtonPressed() ) {
     BPresses++;
   }
-  if ( armController->GetBButtonReleased() ) {
+  if ( armController.GetBButtonReleased() ) {
     //Start timer for multiple button presses when the first button is released.
     //needs if statement so that a button held from previous interval
     //doesn't start next interval w/out increasing b
@@ -227,7 +227,7 @@ void Arm::DebugArm() {
   DebugArmGrabber();
 
   //Reset Encoders
-  if ( armController->GetRightStickButtonPressed() ) {
+  if ( armController.GetRightStickButtonPressed() ) {
     armJointEncoder.Reset();
     armGrabberEncoder.Reset();
     armExtensionEncoder.Reset();
@@ -235,11 +235,11 @@ void Arm::DebugArm() {
 }
 
 void Arm::DebugArmJoint() {
-  if (armController->GetRightBumperPressed()) armMovingUp = true;
-  if (armController->GetRightBumperReleased()) armMovingUp = false;
+  if (armController.GetRightBumperPressed()) armMovingUp = true;
+  if (armController.GetRightBumperReleased()) armMovingUp = false;
 
-  if (armController->GetLeftBumperPressed()) armMovingDown = true;
-  if (armController->GetLeftBumperReleased()) armMovingDown = false;
+  if (armController.GetLeftBumperPressed()) armMovingDown = true;
+  if (armController.GetLeftBumperReleased()) armMovingDown = false;
 
   //make sure that if both buttons are pressed, arm doesn't try to move both ways
   if (armMovingUp && !armMovingDown) {
@@ -258,11 +258,11 @@ void Arm::DebugArmJoint() {
 }
 
 void Arm::DebugArmExtension() {
-  if (armController->GetXButtonPressed()) armIsExtending = true;
-  if (armController->GetXButtonReleased()) armIsExtending = false;
+  if (armController.GetXButtonPressed()) armIsExtending = true;
+  if (armController.GetXButtonReleased()) armIsExtending = false;
 
-  if (armController->GetYButtonPressed()) armIsRetracting = true;
-  if (armController->GetYButtonReleased()) armIsRetracting = false;
+  if (armController.GetYButtonPressed()) armIsRetracting = true;
+  if (armController.GetYButtonReleased()) armIsRetracting = false;
 
   if(armIsRetracting && !armIsExtending) {
     armExtension.Set(Speeds::RETRACT_SPEED);
@@ -280,10 +280,10 @@ void Arm::DebugArmExtension() {
 }
 
 void Arm::DebugArmGrabber() {
-  if ( armController->GetLeftTriggerAxis() > 0.0 ) {
+  if ( armController.GetLeftTriggerAxis() > 0.0 ) {
     armGrabberJoint.Set(Speeds::GRABBER_UPWARDS_SPEED);
   }
-  else if ( armController->GetRightTriggerAxis() > 0.0 ) {
+  else if ( armController.GetRightTriggerAxis() > 0.0 ) {
     armGrabberJoint.Set(Speeds::GRABBER_DOWNWARDS_SPEED);
   }
   else {
