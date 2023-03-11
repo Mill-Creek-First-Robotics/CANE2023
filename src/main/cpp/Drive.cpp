@@ -16,7 +16,7 @@ Drive::Drive() {
 void Drive::TuxDrive() {
   bindings.UpdateConditions(); //needed to update bindings/controller state.
   //check for mode toggles
-  if ( bindings.GetDriveSlowModeToggle() ) {
+  if ( bindings.GetGrabberToggle() ) {
     mode == DriveMode::NORMAL ? mode = DriveMode::PRECISION : mode = DriveMode::NORMAL; 
   }
   if ( bindings.GetDriveUltraSlowModeToggle() ) {

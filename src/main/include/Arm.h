@@ -34,43 +34,43 @@ enum class ArmMode {
 class Arm {
  public:
   Arm();
-  void SetJointAndGrabberLimits(JointPositions pos);
-  // void SetExtensionLimits(ExtensionPositions pos);
-  void MoveWithinLimits (
-    WPI_TalonSRX* motor,
-    int distance,
-    double speedf,
-    double speedb,
-    int limitUpper,
-    int limitLower 
-  );
+  // void SetJointAndGrabberLimits(JointPositions pos);
+  // // void SetExtensionLimits(ExtensionPositions pos);
+  // void MoveWithinLimits (
+  //   WPI_TalonSRX* motor,
+  //   int distance,
+  //   double speedf,
+  //   double speedb,
+  //   int limitUpper,
+  //   int limitLower 
+  // );
   void ArmUpdate();
-  void MoveArmExtension();
-  void MoveArmJoint();
-  void MoveGrabber();
+  // void MoveArmExtension();
+  // void MoveArmJoint();
+  // void MoveGrabber();
   void HandleGrabberPneumatics();
-  void HandleJointInput();
+  // void HandleJointInput();
   //// void HandleExtensionInput();
   void PutToSmartDashboard();
   void UpdateSelection();
   void UpdateBindings();
   
-  void AutoMoveArmToPosition(JointPositions pos);
-  void AutoExtendArm();
-  void AutoRetractArm();
+  // void AutoMoveArmToPosition(JointPositions pos);
+  // void AutoExtendArm();
+  // void AutoRetractArm();
   //debug functions are for manually moving respective parts
   //useful for getting encoder values to set accurate limits
-  void DebugArm();
-  void ManualArmJoint();         
-  void ManualArmExtension();
-  void ManualArmGrabber();
+  // void DebugArm();
+  // void ManualArmJoint();         
+  // void ManualArmExtension();
+  // void ManualArmGrabber();
 
-  void NotGravity (WPI_TalonSRX* motor,
-    bool upCondition, bool upReleaseCondition,
-    bool downCondition, bool downReleaseCondition,
-    bool* movingUp, bool* movingDown,
-    double upwardsSpeed, double downwardsSpeed
-  );
+  // void NotGravity (WPI_TalonSRX* motor,
+  //   bool upCondition, bool upReleaseCondition,
+  //   bool downCondition, bool downReleaseCondition,
+  //   bool* movingUp, bool* movingDown,
+  //   double upwardsSpeed, double downwardsSpeed
+  // );
  private:
   SendableChooser<string> chooser;
   string const defaultArm = "Default";

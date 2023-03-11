@@ -69,7 +69,7 @@ void Robot::TestInit() {
 }
 void Robot::TestPeriodic() {
   m_drive.TuxDrive();
-  m_arm.DebugArm();
+  // m_arm.DebugArm();
 }
 
 void Robot::SimulationInit() {}
