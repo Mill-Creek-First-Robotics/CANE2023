@@ -30,6 +30,7 @@ class Drive {
   Drive(shared_ptr<XboxController>& controller); //Constructor
   void TuxDrive(); //Actual driving
   void Autonomous();
+  void TimerReset();
 
  private:
 
