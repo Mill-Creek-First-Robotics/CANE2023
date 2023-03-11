@@ -11,8 +11,8 @@ int const COMPRESSOR = 0;
  * @desc: Controller index as defined in driverstation.
  */
 enum Controller {
-  DRIVE_XBOX_CONTROLLER = 1,
-  ARM_XBOX_CONTROLLER = 2
+  DRIVE_XBOX_CONTROLLER = 0,
+  ARM_XBOX_CONTROLLER = 1
 };
 
 /**
