@@ -71,10 +71,6 @@ class Arm {
     bool* movingUp, bool* movingDown,
     double upwardsSpeed, double downwardsSpeed
   );
-  // Unit Testing
-  WPI_TalonSRX *GetExtensionMotor() {
-    return &armExtension;
-  }
  private:
   SendableChooser<string> chooser;
   string const defaultArm = "Default";

@@ -11,7 +11,8 @@ void Bindings::Configure(T config) {
   armRightX = config.armRightX;
   armLeftY = config.armLeftY;
   armRightY = config.armRightY;
-  buttonDriveModeToggle = config.DriveModeToggle;
+  buttonDriveSlowModeToggle = config.DriveSlowModeToggle;
+  buttonDriveUltraSlowModeToggle = config.DriveUltraSlowModeToggle;
   buttonArmModeToggle = config.ArmModeToggle;
   buttonArmExtend = config.ArmExtend;
   buttonArmExtendReleased = config.ArmExtendReleased;
@@ -91,8 +92,12 @@ double Bindings::GetArmRightY() {
   return armRightY;
 }
 
-bool Bindings::GetDriveModeToggle() {
-  return buttonDriveModeToggle;
+bool Bindings::GetDriveSlowModeToggle() {
+  return buttonDriveSlowModeToggle;
+}
+
+bool Bindings::GetDriveUltraSlowModeToggle() {
+  return buttonDriveUltraSlowModeToggle;
 }
 
 bool Bindings::GetArmModeToggle() {

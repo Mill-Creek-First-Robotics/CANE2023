@@ -26,16 +26,19 @@ using namespace std;
 
 enum class DriveMode {
   NORMAL,
-  PRECISION
+  PRECISION,
+  FINEPRECISION
 };
 
 class Drive {
  public:
   Drive();
   void TuxDrive(); //Actual driving
-  void Autonomous();
+  void AutoSimple();
+  void AutoSimpleForward();
   void UpdateSelection();
   void UpdateBindings();
+  void TimerReset();
  private:
   SendableChooser<string> chooser;
   string const styleDefault = "Default";

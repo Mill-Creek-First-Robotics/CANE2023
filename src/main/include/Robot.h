@@ -32,12 +32,12 @@ class Robot : public TimedRobot {
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-
  private:
   SendableChooser<string> m_chooser;
   string const kAutoNameDefault = "Default";
-  string const kAutoNameCustom = "My Auto";
-  string m_autoSelected = kAutoNameCustom;
+  string const kAutoNameSimple = "Simple auto balance";
+  string const kAutoNameSimpleForward = "Simple Forward";
+  string m_autoSelected = kAutoNameSimple;
   Arm m_arm{};
   Drive m_drive{};
 };

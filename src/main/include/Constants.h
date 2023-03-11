@@ -55,15 +55,12 @@ enum Solenoids {
  */
 namespace Speeds {
   /* === ARM === */
-  units::second_t const BBUTTON_CHECK_INTERVAL = 1_s; 
   double const JOINT_UPWARDS_SPEED = -0.5;
   double const JOINT_DOWNWARDS_SPEED = 0.5;
   double const EXTEND_SPEED = -10.0;
   double const RETRACT_SPEED = 10.0;
   double const GRABBER_UPWARDS_SPEED = 1.0;
   double const GRABBER_DOWNWARDS_SPEED = -1.0;
-  /* === DRIVETRAIN === */
-  double const AUTO_SPEED = 0.5;
 } //namespace Speeds
 
 //Limits for the arm positions
@@ -74,10 +71,13 @@ enum class JointPositions {
   POS3
 };
 namespace JointLimits {
+  //object pickup
   double const ONE_UPPER = 0;
   double const ONE_LOWER = 0;
+  //object dropoff
   double const TWO_UPPER = 0;
   double const TWO_LOWER = 0;
+  //object dropoff high
   double const THREE_UPPER = 0;
   double const THREE_LOWER = 0;
 } //namespace JointLimits

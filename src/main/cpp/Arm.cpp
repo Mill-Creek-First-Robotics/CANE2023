@@ -11,19 +11,17 @@ Arm::Arm() {
   armGrabberEncoder.Reset();
 
   // armGrabberEncoder.SetDownSourceEdge(true,true);
-  armGrabberEncoder.SetUpSource(Encoders::GRABBER_ENCODER);
-  //// ^
-  
+  armGrabberEncoder.SetUpSource(Encoders::GRABBER_ENCODER);  
   armGrabberEncoder.SetUpSourceEdge(true,true);  
-
   armGrabberEncoder.SetUpDownCounterMode();
-  // armGrabberEncoder.SetDistancePerPulse(500./256.);
+  //// armGrabberEncoder.SetDistancePerPulse(500./256.);
 
   SetJointAndGrabberLimits(JointPositions::POS1); //Default joint & grabber limits
   // SetExtensionLimits(ExtensionPositions::EXT_L);  //Default extension limits
   compressor.Disable();
   compressor.EnableDigital();
 
+  //Arm Driver options setup on smartdashboard
   chooser.SetDefaultOption(defaultArm, defaultArm);
   for ( string driver : drivers ) {
     chooser.AddOption(driver, driver);

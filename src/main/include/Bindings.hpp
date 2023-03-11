@@ -21,7 +21,8 @@ class Bindings {
   double GetArmRightX();
   double GetArmLeftY();
   double GetArmRightY();
-  bool GetDriveModeToggle();
+  bool GetDriveSlowModeToggle();
+  bool GetDriveUltraSlowModeToggle();
   bool GetArmModeToggle();
   bool GetArmExtend();
   bool GetArmExtendReleased();
@@ -49,7 +50,8 @@ class Bindings {
   double armRightX;
   double armLeftY;
   double armRightY;
-  bool buttonDriveModeToggle;
+  bool buttonDriveSlowModeToggle;
+  bool buttonDriveUltraSlowModeToggle;
   bool buttonArmModeToggle;
   bool buttonArmExtend;
   bool buttonArmExtendReleased;

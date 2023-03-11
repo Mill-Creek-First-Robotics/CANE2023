@@ -2,7 +2,8 @@
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  m_chooser.AddOption(kAutoNameSimple, kAutoNameSimple);
+  m_chooser.AddOption(kAutoNameSimpleForward, kAutoNameSimpleForward);
   SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
@@ -36,11 +37,15 @@ void Robot::AutonomousInit() {
   // } else {
   //   m_drive->TimerReset();
   // }
+  m_drive.TimerReset();
 }
 
 void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    m_drive.Autonomous();
+  if (m_autoSelected == kAutoNameSimple) {
+    m_drive.AutoSimple();
+  }
+  else if (m_autoSelected == kAutoNameSimpleForward) {
+    m_drive.AutoSimpleForward();
   }
 }
 
