@@ -258,25 +258,25 @@ void Arm::DebugArmJoint() {
 }
 
 void Arm::DebugArmExtension() {
-  if (armController.GetXButtonPressed()) armIsExtending = true;
-  if (armController.GetXButtonReleased()) armIsExtending = false;
+  // if (armController.GetXButtonPressed()) armIsExtending = true;
+  // if (armController.GetXButtonReleased()) armIsExtending = false;
 
-  if (armController.GetYButtonPressed()) armIsRetracting = true;
-  if (armController.GetYButtonReleased()) armIsRetracting = false;
+  // if (armController.GetYButtonPressed()) armIsRetracting = true;
+  // if (armController.GetYButtonReleased()) armIsRetracting = false;
 
-  if(armIsRetracting && !armIsExtending) {
-    armExtension.Set(Speeds::RETRACT_SPEED);
-  }
-  else if (!armIsExtending) {
-    armExtension.Set(0.0);
-  }
+  // if(armIsRetracting && !armIsExtending) {
+  //   armExtension.Set(Speeds::RETRACT_SPEED);
+  // }
+  // else if (!armIsExtending) {
+  //   armExtension.Set(0.0);
+  // }
 
-  if(armIsExtending && !armIsRetracting) {
-    armExtension.Set(Speeds::EXTEND_SPEED);
-  }
-  else if (!armIsRetracting) {
-    armExtension.Set(0.0);
-  }
+  // if(armIsExtending && !armIsRetracting) {
+  //   armExtension.Set(Speeds::EXTEND_SPEED);
+  // }
+  // else if (!armIsRetracting) {
+  //   armExtension.Set(0.0);
+  // }
 }
 
 void Arm::DebugArmGrabber() {
