@@ -87,6 +87,7 @@ void Arm::ArmUpdate() {
   else {
     armGrabberPosition -= armGrabberEncoderDistance;
   }
+  armJoint.Set(-0.1);
   //reset the count
   armGrabberEncoder.Reset();
   armJointEncoderDistance = -armJointEncoder.GetDistance();
