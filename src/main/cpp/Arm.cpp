@@ -96,16 +96,9 @@ void Arm::ArmUpdate() {
   //   MODE == ArmMode::MANUAL ? MODE = ArmMode::NORMAL : MODE = ArmMode::MANUAL;
   // }
  /* --=[ FUNCTION CALLS ]=-- */
-  if ( MODE == ArmMode::NORMAL ) {
-    // HandleJointInput();
-    // MoveGrabber();
-    //// HandleExtensionInput();
-  }
-  else if ( MODE == ArmMode::MANUAL ) {
     ManualArmJoint();
     ManualArmGrabber();
     ManualArmExtension();
-  }
   HandleGrabberPneumatics();
  /* --=[ END ]=-- */
 }
@@ -130,6 +123,8 @@ void Arm::ArmUpdate() {
 // }
 
 void Arm::HandleGrabberPneumatics() {
+  bindings.UpdateConditions();
+
   if ( bindings.GetGrabberToggle() ) {
     armGrabberPiston.Toggle();
   }
@@ -291,6 +286,8 @@ void Arm::NotGravity(WPI_TalonSRX* motor,
   bool downCondition, bool downReleaseCondition,
   bool* movingUp, bool* movingDown,
   double upwardsSpeed, double downwardsSpeed ) {
+
+  bindings.UpdateConditions();
 
   if ( upCondition ) {
     *movingUp = true;
