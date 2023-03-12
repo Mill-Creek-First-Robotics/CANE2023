@@ -30,6 +30,7 @@ class Drive {
   Drive(); //Constructor
   void TuxDrive(); //Actual driving
   void Autonomous();
+  void TimerReset();
 
  private:
 
