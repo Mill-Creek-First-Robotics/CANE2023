@@ -29,7 +29,7 @@ enum class Mode {
 
 class Arm {
  public:
-  Arm();
+  Arm(shared_ptr<XboxController>& controller);
   void SetJointAndGrabberLimits(JointPositions pos);
   void SetExtensionLimits(ExtensionPositions pos);
   void MoveWithinLimits (
@@ -63,7 +63,7 @@ class Arm {
     return &armExtension;
   }
  private:
-  XboxController armController{Constants::Controller::ARM_XBOX_CONTROLLER};
+  shared_ptr<XboxController> armController;
   WPI_TalonSRX armJoint{MotorControllers::ARM_JOINT};
   WPI_TalonSRX armGrabberJoint{MotorControllers::ARM_GRABBER_JOINT};
   WPI_TalonSRX armExtension{MotorControllers::ARM_EXTENSION};

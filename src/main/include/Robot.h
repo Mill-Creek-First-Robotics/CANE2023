@@ -40,7 +40,7 @@ class Robot : public TimedRobot {
   string const kAutoNameCustom = "My Auto";
   string m_autoSelected = kAutoNameCustom;
   /* --=[###################]=-- */
-  // shared_ptr<XboxController> m_controller = make_shared<XboxController>(Constants::Controller::DRIVE_XBOX_CONTROLLER);
+  shared_ptr<XboxController> m_controller = make_shared<XboxController>(Constants::Controller::DRIVE_XBOX_CONTROLLER);
   /**
    * Here are the current Button Bindixngs:
    * A = Toggle grabber (pneumatic piston)
@@ -49,7 +49,7 @@ class Robot : public TimedRobot {
    * Left Joystick Y-Axis = Move robot forwards/backwards
    * Right Joystick X-Axis = Rotate robot left/right
    */
-  Arm m_arm{};
-  Drive m_drive{};
+  Arm m_arm{m_controller};
+  Drive m_drive{m_controller};
   Timer m_timer{};
 };

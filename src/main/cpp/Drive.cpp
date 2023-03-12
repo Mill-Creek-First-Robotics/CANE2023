@@ -1,13 +1,13 @@
 #include "Drive.h"
 #include <iostream>
 
-Drive::Drive() {
+Drive::Drive(shared_ptr<XboxController>& controller) : m_controller(controller) {
   m_timer.Start();
   m_left.SetInverted(true);
 }
 
 void Drive::TuxDrive() {
-  if (m_controller.GetLeftStickButtonPressed()) {
+  if (m_controller->GetLeftStickButtonPressed()) {
     mode == DriveMode::NORMAL ? mode = DriveMode::SLOW : mode = DriveMode::NORMAL;
   }
   double leftY = m_controller->GetLeftY();
