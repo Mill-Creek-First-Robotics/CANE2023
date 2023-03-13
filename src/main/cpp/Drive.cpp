@@ -8,6 +8,7 @@ Drive::Drive(shared_ptr<XboxController>& controller) : m_controller(controller) 
 
 void Drive::TuxDrive() {
   if (m_controller->GetLeftStickButtonPressed()) {
+    // if mode is DriveMode::NORMAL then DriveMode::SLOW else DriveMode::NORMAL
     mode == DriveMode::NORMAL ? mode = DriveMode::SLOW : mode = DriveMode::NORMAL;
   }
   double leftY = m_controller->GetLeftY();
