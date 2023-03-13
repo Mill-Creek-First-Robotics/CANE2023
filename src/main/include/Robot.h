@@ -5,11 +5,16 @@
 #include "Arm.h"
 #include "Drive.h"
 #include "Constants.h"
+
 #include <string>
+#include <memory>
+#include <frc/Timer.h>
 #include <fmt/core.h>
+#include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
+
 using namespace std;
 using namespace frc;
 
@@ -33,57 +38,18 @@ class Robot : public TimedRobot {
   SendableChooser<string> m_chooser;
   string const kAutoNameDefault = "Default";
   string const kAutoNameCustom = "My Auto";
-  string m_autoSelected;
+  string m_autoSelected = kAutoNameCustom;
   /* --=[###################]=-- */
-
-  /* --=[ DRIVETRAIN ]=-- */
-  //Left Motors
-  // type name = new type(args); means dynamic allocation. Object is deleted when we explicitly say so, useful to avoid scope errors.
-  WPI_TalonSRX *m_frontLeft = new WPI_TalonSRX(MotorControllerSRX::FRONT_LEFT_MOTOR);
-  WPI_TalonSRX *m_backLeft = new WPI_TalonSRX(MotorControllerSRX::BACK_LEFT_MOTOR);
-  MotorControllerGroup *m_left = new MotorControllerGroup(*m_frontLeft, *m_backLeft);
-
-  //Right Motors
-  WPI_TalonSRX *m_frontRight = new WPI_TalonSRX(MotorControllerSRX::FRONT_RIGHT_MOTOR);
-  WPI_TalonSRX *m_backRight = new WPI_TalonSRX(MotorControllerSRX::BACK_RIGHT_MOTOR);
-  MotorControllerGroup *m_right = new MotorControllerGroup(*m_frontRight, *m_backRight);
-
-  //Create a differential drive using the two previously defined motor groups.
-  DifferentialDrive *m_drivetrain = new DifferentialDrive(*m_left, *m_right);
-  
-  XboxController *m_controller = new XboxController(Controller::DRIVE_XBOX_CONTROLLER);
-  /** Button Bindings Overview:
-  *  Left Joystick y-axis = move robot forward/back
-  *  Right Joystick x-axis = rotate robot left/right
-  *  'A' button = toggle the grabber pneumatics extended/retracted
-  *  //
-  *  //
-  *  //
-  */
-  // Timer *m_timer; //I have no clue if this can be a pointer or not.
-  // units::second_t *startTime;
-  Drive *m_drive = new Drive
-    (
-      this->m_drivetrain,
-      this->m_controller
-    );
-  /* --=[############]=-- */
-
-  /* --=[ ARM & GRABBER ]=-- */
-  //int deviceNumber
-  WPI_TalonSRX *armJoint = new WPI_TalonSRX(MotorControllerSRX::ARM_MOTOR_CONTROLLER);
-  //Define the Compressor and Pneumatic Piston that controls grabber
-  //{int compressor, module type}
-  Compressor *pcmCompressor = new Compressor(COMPRESSOR, PneumaticsModuleType::CTREPCM);
-  //{Module type, int channel}
-  Solenoid *grabberPiston = new Solenoid(PneumaticsModuleType::CTREPCM, ChannelSolenoid::ARM_SOLENOID);
-
-  Arm *m_arm = new Arm
-    (
-      this->m_controller,
-      this->m_drivetrain,
-      this->grabberPiston,
-      this->armJoint
-    );
-  /* --=[###############]=-- */
+  shared_ptr<XboxController> m_controller = make_shared<XboxController>(Constants::Controller::DRIVE_XBOX_CONTROLLER);
+  /**
+   * Here are the current Button Bindixngs:
+   * A = Toggle grabber (pneumatic piston)
+   * B = Move to arm positions based on # of presses. Max three.
+   * X = Toggle Arm extended/retracted
+   * Left Joystick Y-Axis = Move robot forwards/backwards
+   * Right Joystick X-Axis = Rotate robot left/right
+   */
+  Arm m_arm{m_controller};
+  Drive m_drive{m_controller};
+  Timer m_timer{};
 };

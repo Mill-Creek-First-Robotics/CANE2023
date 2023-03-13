@@ -1,26 +1,37 @@
 #include "Drive.h"
+#include <iostream>
 
-Drive::Drive(DifferentialDrive *d, XboxController *x)
-:
-drive(d),
-controller(x) 
-{
-    // this->startTime = this->m_timer->GetFPGATimestamp();
+Drive::Drive(shared_ptr<XboxController>& controller) : m_controller(controller) {
+  m_timer.Start();
+  m_left.SetInverted(true);
 }
 
 void Drive::TuxDrive() {
-    drive->ArcadeDrive(controller->GetLeftY(),-controller->GetRightX() * 0.6);
+  if (m_controller->GetLeftStickButtonPressed()) {
+    mode == DriveMode::NORMAL ? mode = DriveMode::SLOW : mode = DriveMode::NORMAL;
+  }
+  double leftY = m_controller->GetLeftY();
+  double rightX = m_controller->GetRightX();
+  if (mode == DriveMode::NORMAL)
+    {
+      leftY /= 1.3;
+      rightX /= 1.3;
+    } 
+  if (mode == DriveMode::SLOW) {
+    leftY /= 1.6;
+    rightX /= 1.6;
+  }
+  m_drive.ArcadeDrive(leftY,rightX);
 }
 
 void Drive::Autonomous() {
-    // if (this->m_timer->GetFPGATimestamp() - this->startTime < (units::second_t)2) {
-    //     this->m_drivetrain->ArcadeDrive(-1.0, 0.0); //Move backwards
-    // }
-    // else {
-    //     this->m_drivetrain->ArcadeDrive(0.0, 0.0);
-    // }
+  if (m_timer.Get() < 2_s) { 
+    m_drive.ArcadeDrive(0.5, 0.0, false);
+  } else {
+    m_drive.ArcadeDrive(0.0,0.0);
+  }
 }
 
 void Drive::TimerReset() {
-    // this->startTime = this->m_timer->GetFPGATimestamp();
+  m_timer.Reset();
 }
