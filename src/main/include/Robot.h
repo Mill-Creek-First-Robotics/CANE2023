@@ -7,6 +7,7 @@
 #include "Constants.h"
 
 #include <string>
+#include <vector>
 #include <memory>
 #include <frc/Timer.h>
 #include <fmt/core.h>
@@ -36,9 +37,10 @@ class Robot : public TimedRobot {
  private:
   /* --=[ DEFAULT VARIABLES ]=-- */
   SendableChooser<string> m_chooser;
-  string const kAutoNameDefault = "Default";
-  string const kAutoNameCustom = "My Auto";
-  string m_autoSelected = kAutoNameCustom;
+  string const kAutoNameSimple = "SimpleAuto";
+  string const kAutoNameBalance = "Balance";
+  string const kAutoNameBalancePastLine = "Balance Past Line";
+  string selected = kAutoNameSimple;
   /* --=[###################]=-- */
   shared_ptr<XboxController> m_controller = make_shared<XboxController>(Constants::Controller::DRIVE_XBOX_CONTROLLER);
   /**

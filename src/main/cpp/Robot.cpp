@@ -1,8 +1,9 @@
 #include "Robot.h"
 
 void Robot::RobotInit() {
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  m_chooser.SetDefaultOption(kAutoNameSimple, kAutoNameSimple);
+  m_chooser.AddOption(kAutoNameBalance, kAutoNameBalance);
+  m_chooser.AddOption(kAutoNameBalancePastLine, kAutoNameBalancePastLine);
   SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
@@ -25,11 +26,20 @@ void Robot::RobotPeriodic() {}
  * if-else structure below with additional strings. If using the SendableChooser
  * make sure to add them to the chooser code above as well.
  */
-void Robot::AutonomousInit() {m_drive.TimerReset(); }
+void Robot::AutonomousInit() {
+  m_drive.TimerReset();
+}
 
 void Robot::AutonomousPeriodic() {
-   if (m_autoSelected == kAutoNameCustom) {
-    m_drive.Autonomous();
+  selected = m_chooser.GetSelected();
+  if (selected == kAutoNameSimple) {
+    m_drive.SimpleAuto();
+  }
+  if (selected == kAutoNameBalance) {
+    m_drive.BalanceAuto();
+  }
+  if (selected == kAutoNameBalancePastLine) {
+    m_drive.BalancePastLineAuto();
   }
 }
 

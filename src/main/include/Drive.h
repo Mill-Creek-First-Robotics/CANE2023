@@ -26,12 +26,12 @@ enum class DriveMode {
 
 class Drive {
  public:
- 
   Drive(shared_ptr<XboxController>& controller); //Constructor
   void TuxDrive(); //Actual driving
-  void Autonomous();
+  void SimpleAuto(); //moves past line
+  void BalanceAuto(); //moves onto charging station.
+  void BalancePastLineAuto(); //moves past line, then backs up to charging station.
   void TimerReset();
-
  private:
 
   DriveMode mode = DriveMode::NORMAL;
@@ -46,8 +46,6 @@ class Drive {
   MotorControllerGroup m_right{m_frontRight, m_backRight};
 
   DifferentialDrive m_drive{m_left,m_right};
-
- 
   //AHRS m_gyro{SPI::Port::kMXP};
 
   Timer m_timer;
