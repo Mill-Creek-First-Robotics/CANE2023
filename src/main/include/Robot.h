@@ -4,6 +4,7 @@
 #pragma once
 #include "Arm.h"
 #include "Drive.h"
+#include "Auto.h"
 #include "Constants.h"
 
 #include <string>
@@ -36,9 +37,9 @@ class Robot : public TimedRobot {
  private:
   /* --=[ DEFAULT VARIABLES ]=-- */
   SendableChooser<string> m_chooser;
-  string const kAutoNameDefault = "Default";
-  string const kAutoNameCustom = "My Auto";
-  string m_autoSelected = kAutoNameCustom;
+  string const kAutoNameNormal = "Normal";
+  string const kAutoNameGyro = "Gyro";
+  string m_autoSelected = kAutoNameGyro;
   /* --=[###################]=-- */
   shared_ptr<XboxController> m_controller = make_shared<XboxController>(Constants::Controller::DRIVE_XBOX_CONTROLLER);
   /**
@@ -51,5 +52,6 @@ class Robot : public TimedRobot {
    */
   Arm m_arm{m_controller};
   Drive m_drive{m_controller};
+  Auto m_auto{};
   Timer m_timer{};
 };

@@ -19,22 +19,16 @@
 using namespace frc;
 using namespace std;
 
-enum class DriveMode {
-  NORMAL,
-  SLOW
-};
-
-class Drive {
+class Auto {
  public:
  
-  Drive(shared_ptr<XboxController>& controller); //Constructor
-  void TuxDrive(); //Actual driving
+  Auto(); //Constructor
+  void Normal();
+  void Gyro();
+  void TimerReset();
 
  private:
 
-  DriveMode mode = DriveMode::NORMAL;
-  // XboxController m_controller{Constants::Controller::DRIVE_XBOX_CONTROLLER}; //Controller};
-  shared_ptr<XboxController> m_controller;
   WPI_TalonSRX m_frontLeft{Constants::MotorControllers::FRONT_LEFT};
   WPI_TalonSRX m_backLeft{Constants::MotorControllers::BACK_LEFT};
   MotorControllerGroup m_left{m_frontLeft, m_backLeft};
@@ -46,5 +40,7 @@ class Drive {
   DifferentialDrive m_drive{m_left,m_right};
 
  
-  //AHRS m_gyro{SPI::Port::kMXP};
+  AHRS m_gyro{SPI::Port::kMXP};
+
+  Timer m_timer;
 };

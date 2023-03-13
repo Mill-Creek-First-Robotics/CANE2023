@@ -2,7 +2,6 @@
 #include <iostream>
 
 Drive::Drive(shared_ptr<XboxController>& controller) : m_controller(controller) {
-  m_timer.Start();
   m_left.SetInverted(true);
 }
 
@@ -23,16 +22,4 @@ void Drive::TuxDrive() {
     rightX /= 1.6;
   }
   m_drive.ArcadeDrive(leftY,rightX);
-}
-
-void Drive::Autonomous() {
-  if (m_timer.Get() < 2_s) { 
-    m_drive.ArcadeDrive(0.5, 0.0, false);
-  } else {
-    m_drive.ArcadeDrive(0.0,0.0);
-  }
-}
-
-void Drive::TimerReset() {
-  m_timer.Reset();
 }
