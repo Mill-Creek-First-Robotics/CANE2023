@@ -19,7 +19,7 @@ void Auto::Gyro() {
     m_drive.ArcadeDrive(0.5, 0.0, false);
   } else {
     double rollAngleRadians = m_gyro.GetRoll() * (M_PI / 180.0);
-    m_drive.ArcadeDrive((rollAngleRadians) * -1 , 0.0, false);
+    m_drive.ArcadeDrive((rollAngleRadians), 0.0, false);
   }
 }
 
