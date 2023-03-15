@@ -42,6 +42,11 @@ int const EXTEND_ENCODER_ACHANNEL = 1;
 int const EXTEND_ENCODER_BCHANNEL = 2;
 } //namespace Encoders
 
+namespace Gyro {
+  static const double kOffBalanceThresholdDegrees = 10.0f;
+  static const double kOnBalanceThresholdDegrees  = 5.0f;
+}
+
 /**
  * @desc: channel for solenoids.
  */
